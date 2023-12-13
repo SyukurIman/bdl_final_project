@@ -1,5 +1,5 @@
 <?php 
-include 'config_db.php';
+include 'database/config_db.php';
 
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
@@ -17,82 +17,83 @@ if (isset($_GET['msg'])){
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Data Kelola</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="">
+    <title>Admin Healyou</title>
+
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <!-- Nucleo Icons -->
+    <link href="assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="assets/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <link href="assets/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- CSS Files -->
+    <link id="pagestyle" href="assets/css/soft-ui-dashboard.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="assets/vendors/gaxon-icon/style.css">
+    <link rel="stylesheet" href="assets/vendors/font-awesome/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+
+        
 </head>
 <body>
-  <h2>Data Input Pegawai: </h2>
-  <form action="change_data.php" method="post">
-    <label for="first_name">Nama Depan</label>
-    <input value="<?php if(isset($data_lama)) echo $data_lama[0] ?>" type="text" name="first_name" id="first_name">
+    <?php include 'sidebar.php'; ?>
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+        <?php include "nav.php"; ?>
 
-    <label for="last_name">Nama Belakang</label>
-    <input value="<?php if(isset($data_lama)) echo $data_lama[1] ?>" type="text" name="last_name" id="last_name">
-
-    <label for="department_id">List Department</label>
-    <select name="department_id" id="department_id">
-      <?php 
-
-      $query_text_dp = "SELECT department_id, department_name FROM `departments`";
-      $query_depart = mysqli_query($koneksi, $query_text_dp);
-      $data_depart = mysqli_fetch_all($query_depart);
-
-      for($i = 0; $i < count($data_depart); $i++) {
-      ?>
-      <option value="<?php echo $data_depart[$i][0] ?>" <?php if(isset($data_lama) && $data_lama[2] == $data_depart[$i][0]) echo 'selected'  ?>>  
-        <?php echo $data_depart[$i][1] ?>
-      </option>
-
-      
-
-      <?php } ?>
-    </select>
-
-    <?php if(isset($data_lama)) {?>
-      <input type="text" hidden name="employee_id" id="employee_id" value="<?php if(isset($data_lama)) echo $id ?>">
-    <?php }?>
-
-    <label for="salary">Gaji (Dolar)</label>
-    <input value="<?php if(isset($data_lama)) echo $data_lama[3] ?>" type="number" name="salary" id="salary">
-
-    <input type="submit" value="Submit">
-  </form>
-
-  <h2>Tabel Data Pegawai: </h2>
-  <table>
-    <thead>
-      <tr>
-        <td>Firt Name</td>
-        <td>Last Name</td>
-        <td>Departmen Name</td>
-        <td>Gaji</td>
-        <td>Action</td>
-      </tr>
-    </thead>
-    <?php 
-      $query_text_pe = "SELECT employees.first_name, employees.last_name, employees.salary, departments.department_name, employees.employee_id FROM employees INNER JOIN departments ON employees.department_id = departments.department_id";
-      $query_pegawai = mysqli_query($koneksi, $query_text_pe);
-      $data_pegawai = mysqli_fetch_all($query_pegawai);
-      
-      for ($i = 0; $i < count($data_pegawai); $i++){
-    ?>
-      <tbody>
-        <tr>
-          <td><?php echo $data_pegawai[$i][0] ?></td>
-          <td><?php echo $data_pegawai[$i][1] ?></td>
-          
-          <td><?php echo $data_pegawai[$i][3] ?></td>
-          <td><?php echo "Rp. ".number_format((float)$data_pegawai[$i][2] * 16000, 2) ?></td>
-          <td><a href="index.php?id=<?php echo $data_pegawai[$i][4] ?>">Edit</a> 
-              <a href="delete.php?id=<?php echo $data_pegawai[$i][4] ?>">Delete</a>
-          </td>
-        </tr>
-      
-      </tbody> 
-
-    <?php }?>
+        <div class="container-fluid py-4">
+            
+            <?php include 'content.php'; ?>
+            <?php include 'footer.php'; ?>
+        </div>
+        
+    </main>
     
-  </table>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="assets/vendors/datatables/dataTables.buttons.min.js"></script>
+    <script src="assets/vendors/datatables/buttons.html5.min.js"></script>
+    <script src="assets/vendors/datatables/jszip.min.js"></script>
+    <script src="assets/vendors/datatables/pdfmake.min.js"></script>
+    <script src="assets/vendors/datatables/vfs_fonts.js"></script>
+    <script src="assets/vendors/datatables/vfs_fonts.js"></script>
+
+    <!--   Core JS Files   -->
+  <script src="assets/js/core/popper.min.js"></script>
+  <script src="assets/js/core/bootstrap.min.js"></script>
+  <script src="assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script src="assets/js/plugins/chartjs.min.js"></script>
+  
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="assets/js/soft-ui-dashboard.min.js"></script>
 </body>
 </html>
