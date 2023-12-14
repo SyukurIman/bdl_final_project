@@ -21,6 +21,35 @@
           </div>
         </div>
       </div>
+      <div class="filter" style="display: none;">
+        <form action="" method="post" id="form_filter">
+          <div class="row px-4">
+            <div class="col-lg-6 col-md-6 mb-md-0 mb-4 row">
+              <div class="col mt-2">
+                <label class="form-label" for="min_nominal" >Minimum Target Nominal</label>
+                <input class="form-control input_form" type="number" name="min_nominal" id="min_nominal">
+              </div>
+              <div class="col mt-2">
+                <label class="form-label" for="max_nominal" >Maximum Target Nominal</label>
+                <input class="form-control input_form" type="number" name="min_nominal" id="max_nominal">
+              </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 mb-md-0 mb-4 row">
+              <div class="col mt-2">
+                <label class="form-label" for="min_tgl_donasi" >Minimum Batas Donasi </label>
+                <input class="form-control input_form" type="date" name="min_tgl_donasi" id="min_tgl_donasi">
+              </div>
+              <div class="col mt-2">
+                <label class="form-label" for="max_tgl_donasi" >Maximum Batas Donasi </label>
+                <input class="form-control input_form" type="date" name="max_tgl_donasi" id="max_tgl_donasi">
+              </div>
+            </div>
+
+          </div>
+            
+        </form>
+      </div>
       <div class="card-body m-3 px-2 p-2">
         <div class="table-responsive ">
           <table class="table align-items-center mb-0" id="table" style="width: 100%">
@@ -63,10 +92,11 @@
                             </div>
                         </td>
                         <td><?php echo $data[$i][1] ?></td>
-                        <td><?php echo $data[$i][6] ?></td>
+                        <td><?php echo $data[$i][5] ?></td>
                         <td><?php echo $data[$i][2] ?></td>
                         <td>RP. <?php echo number_format($data[$i][3], 2) ?></td>
-                        <td>Rp. </td>
+                        <td>Rp. <?php echo number_format($data[$i][6], 2) ?></td>
+                        <!-- <td style="display: none;"><?= $data[$i][0] ?></td> -->
                     </tr>
                 <?php } ?>
             </tbody>

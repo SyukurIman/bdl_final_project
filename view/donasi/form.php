@@ -9,7 +9,6 @@
           </div>
         </div>
         <div class="card-body px-0 pb-2">
-            <?php var_dump($data) ?>
             <form id="form-data" method="post" autocompleted="off" enctype="multipart/form-data">
             <div class="row my-4 px-4">
                 <div class="col-lg-6 col-md-6 mb-md-0 mb-4 ">
@@ -40,8 +39,11 @@
                       <a href="<?= $position == 'Form Create' ? '/../assets/img/no-photo-available.png' : '/../images/donasi/'.$data[0][0].'/'.$data[0][4]?>" target="_blank" id="imgLink">
                         <img src="<?= $position == 'Form Create' ?  '/../assets/img/no-photo-available.png' : '/../images/donasi/'.$data[0][0].'/'.$data[0][4] ?>" class="mb-3 mt-4" id="output" width="150px">
                       </a>
+                      <input type="hidden" name="gambar_name" id="gambar_name" value="_" >
+                      <input type="hidden" name="gambar_url" id="gambar_url" value="_" >
                       <input type="file" class="form-control" name="gambar_donasi" id="gambar_donasi" onchange="tampilkanGambar(this)" <?= $position == 'Form Create' ? 'required' : '' ?>
-                      value="<? $position == 'Form Create' ? '' : '/../images/donasi/'.$data[0][0].'/'.$data[0][4] ?>">
+                      value="<?= $position == 'Form Create' ? '' : '/../images/donasi/'.$data[0][0].'/'.$data[0][4] ?>">
+                      
                   </div>
                 </div>
                 <script>
@@ -49,6 +51,9 @@
                       var fileInput = input;
                       var output = document.getElementById('output');
                       var imgLink = document.getElementById('imgLink');
+                      var inputImage = document.getElementById('gambar_url')
+                      var inputNameImage = document.getElementById('gambar_name')
+
 
                       if (fileInput.files && fileInput.files[0]) {
                       var fileType = fileInput.files[0].type;
@@ -57,6 +62,8 @@
                       if (allowedTypes.includes(fileType)) {
                           output.src = window.URL.createObjectURL(fileInput.files[0]);
                           imgLink.href = window.URL.createObjectURL(fileInput.files[0]);
+                          inputImage.value = window.URL.createObjectURL(fileInput.files[0]);
+                          inputNameImage.value = fileInput.files[0].name;
                       } else {
                           alert('Hanya file gambar dengan format JPEG, PNG, atau GIF yang diizinkan.');
                           fileInput.value = ''; // Membersihkan input file

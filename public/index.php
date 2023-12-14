@@ -32,6 +32,12 @@ router('GET', '^/donasi/create$', function(){
     $Donasi->create();
 });
 
+router('POST', '^/donasi/save_create/$', function(){
+    header('Content-Type: application/json');
+    $Donasi = new DonasiController($GLOBALS['db']);
+    echo $Donasi->save_create();
+});
+
 router('GET', '^/donasi/update/(?<id>\d+)$', function($params){
     $Donasi = new DonasiController($GLOBALS['db']);
     $Donasi->update($params['id']);
@@ -40,12 +46,23 @@ router('GET', '^/donasi/update/(?<id>\d+)$', function($params){
 router('POST', '^/donasi/save_update/$', function(){
     header('Content-Type: application/json');
     $Donasi = new DonasiController($GLOBALS['db']);
+    echo $Donasi->save_update();
+});
+
+router('POST', '^/donasi/delete/$', function(){
+    header('Content-Type: application/json');
+    $Donasi = new DonasiController($GLOBALS['db']);
     $data = json_decode(file_get_contents('php://input'), true);
+    echo $Donasi->delete($data);
+});
 
-    echo json_encode(['result' => $data]);
-    $Donasi->save_update($data);
+router('POST', '^/donasi/filter/$', function(){
+    header('Content-Type: application/json');
+    $Donasi = new DonasiController($GLOBALS['db']);
 
-    
+    $data = json_decode(file_get_contents('php://input'), true);
+    // $data = $_POST['min_nominal'];
+    echo $data['min_nominal'];
 });
 
 // GET request to /users
