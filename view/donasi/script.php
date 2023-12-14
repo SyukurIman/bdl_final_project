@@ -79,7 +79,7 @@ var data = ( function () {
                                         confirmButtonColor: result.ButtonColor,
                                         type: result.type,
                                     }).then((result) => {
-                                        $('#table').DataTable().ajax.reload();
+                                        location.href = '/donasi';
                                     });
                                 } else {
                                     swal.fire({

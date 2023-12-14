@@ -164,7 +164,23 @@ class DonasiController{
         $sql = "DELETE d.*, p.* FROM data_donasi d LEFT JOIN payments p ON d.id_data_donasi = p.id_donasi WHERE d.id_data_donasi = $id";
         $result = mysqli_query($conn, $sql);
         if ($result) {
-            echo $sql;
+            $msg = [
+                "title" => "Sukses",
+                "type" => "success",
+                "text" => "Data Berhasil Dihapus",
+                "icon" => "success",
+                "ButtonColor" => "#66BB6A"
+            ];
+            return json_encode($msg);
+        } else {
+            $msg = [
+                "title" => "Gagal !!",
+                "type" => "error",
+                "text" => "Data Gagal Dihapus !!",
+                "icon" => "error",
+                "ButtonColor" => "#EF5350"
+            ];
+            return json_encode($msg);
         }
     }
 
