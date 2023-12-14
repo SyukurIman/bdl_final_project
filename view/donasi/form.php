@@ -9,38 +9,39 @@
           </div>
         </div>
         <div class="card-body px-0 pb-2">
+            <?php var_dump($data) ?>
             <form id="form-data" method="post" autocompleted="off" enctype="multipart/form-data">
             <div class="row my-4 px-4">
                 <div class="col-lg-6 col-md-6 mb-md-0 mb-4 ">
                     <div class="col mt-2"> 
                         <label for="judul_donasi" class="form-label">Judul</label>
-                        <input type="hidden" name="id_data_donasi" value="<?= $position == 'Form Create' ? '' : $data?>">
-                        <input type="text" class="form-control input_form" name="judul_donasi" value="<?= $position == 'Form Create' ? '' : $data?>" id="judul_donasi" required>
+                        <input type="hidden" name="id_data_donasi" value="<?= $position == 'Form Create' ? '' : $data[0][0]?>">
+                        <input type="text" class="form-control input_form" name="judul_donasi" value="<?= $position == 'Form Create' ? '' : $data[0][1]?>" id="judul_donasi" required>
                         <p class="help-block" style="display: none;"></p>
                     </div>
                     <div class="col mt-2"> 
                         <label for="target" class="form-label">Target</label>
-                        <input type="number" class="form-control input_form" name="target" value="<?= $position == 'Form Create' ? '' : $data?>" id="target" required>
+                        <input type="number" class="form-control input_form" name="target" value="<?= $position == 'Form Create' ? '' : $data[0][3]?>" id="target" required>
                         <p class="help-block" style="display: none;"></p>
                     </div>
                     <div class="col mt-2"> 
                       <label for="batas_waktu_donasi" class="form-label">Batas Donasi</label>
-                      <input type="date" class="form-control input_form" name="batas_waktu_donasi" value="<?= $position == 'Form Create' ? '' : $data?>" id="batas_waktu_donasi" required>
+                      <input type="date" class="form-control input_form" name="batas_waktu_donasi" value="<?= $position == 'Form Create' ? '' : $data[0][7]?>" id="batas_waktu_donasi" required>
                       <p class="help-block" style="display: none;"></p>
                   </div>
                     <div class="col mt-2"> 
                         <label for="deskripsi_donasi" class="form-label">Deskripsi Donasi</label>
-                        <textarea class="form-control input_form" name="deskripsi_donasi"placeholder="Leave a comment here" id="deskripsi_donasi"><?= $position == 'Form Create' ? '' : $data?></textarea>
+                        <textarea class="form-control input_form" name="deskripsi_donasi"placeholder="Leave a comment here" id="deskripsi_donasi"><?= $position == 'Form Create' ? '' : $data[0][2]?></textarea>
                         <p class="help-block" style="display: none;"></p>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 ">
                   <div class="col text-center px-6 mt-2 mb-2">
-                      <a href="<?= $position == 'Form Create' ? '/../assets/img/no-photo-available.png' : '/../images/donasi/'.$data->id_data_donasi.'/'.$data->gambar_donasi?>" target="_blank" id="imgLink">
-                        <img src="<?= $position == 'Form Create' ?  '/../assets/img/no-photo-available.png' : '/../images/donasi/'.$data->id_data_donasi.'/'.$data->gambar_donasi ?>" class="mb-3 mt-4" id="output" width="150px">
+                      <a href="<?= $position == 'Form Create' ? '/../assets/img/no-photo-available.png' : '/../images/donasi/'.$data[0][0].'/'.$data[0][4]?>" target="_blank" id="imgLink">
+                        <img src="<?= $position == 'Form Create' ?  '/../assets/img/no-photo-available.png' : '/../images/donasi/'.$data[0][0].'/'.$data[0][4] ?>" class="mb-3 mt-4" id="output" width="150px">
                       </a>
                       <input type="file" class="form-control" name="gambar_donasi" id="gambar_donasi" onchange="tampilkanGambar(this)" <?= $position == 'Form Create' ? 'required' : '' ?>
-                      value="<? $position == 'Form Create' ? '' : '/../images/donasi/'.$data->id_data_donasi.'/'.$data->gambar_donasi ?>">
+                      value="<? $position == 'Form Create' ? '' : '/../images/donasi/'.$data[0][0].'/'.$data[0][4] ?>">
                   </div>
                 </div>
                 <script>

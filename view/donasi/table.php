@@ -50,7 +50,7 @@
               </tr>
             </thead>
             <tbody>
-                <?php $i = 1; echo var_dump($data); ?>
+                <?php $i = 1; ?>
                 <?php for ($i = 0; $i < count($data); $i++) { ?>
                     <tr>
                         <td><?= $i+1 ?></td>

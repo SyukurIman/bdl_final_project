@@ -30,7 +30,7 @@
                     Aksi
                 </th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                  Nama User
+                  Email User
                 </th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                     Nama Donasi
@@ -47,6 +47,24 @@
               </tr>
             </thead>
             <tbody>
+            <?php $i = 1; ?>
+                <?php for ($i = 0; $i < count($data); $i++) { ?>
+                    <tr>
+                        <td><?= $i+1 ?></td>
+                        <td>
+                            <div class="text-center">
+                                <div class="btn-group btn-group-solid mx-2">
+                                    <a href="/payment/update/<?php echo $data[$i][0] ?>" class="btn btn-warning btn-raised btn-xs" id="btn-ubah" title="Ubah"><i class="icon-edit"></i></a>
+                                </div>
+                            </div>
+                        </td>
+                        <td><?php echo $data[$i][1] ?></td>
+                        <td><?php echo $data[$i][2] ?></td>
+                        <td><?php echo $data[$i][3] ?></td>
+                        <td>RP. <?php echo number_format($data[$i][4], 2) ?></td>
+                        <td><?php echo $data[$i][5] == 1 ? 'Menunggu Pembayaran' : ($data[$i][5] == 2 ? 'Pembayaran Berhasil' : 'Pembayaran Expired') ?></td>
+                    </tr>
+                <?php } ?>
             </tbody>
           </table>
         </div>

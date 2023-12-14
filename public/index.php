@@ -32,6 +32,22 @@ router('GET', '^/donasi/create$', function(){
     $Donasi->create();
 });
 
+router('GET', '^/donasi/update/(?<id>\d+)$', function($params){
+    $Donasi = new DonasiController($GLOBALS['db']);
+    $Donasi->update($params['id']);
+});
+
+router('POST', '^/donasi/save_update/$', function(){
+    header('Content-Type: application/json');
+    $Donasi = new DonasiController($GLOBALS['db']);
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    echo json_encode(['result' => $data]);
+    $Donasi->save_update($data);
+
+    
+});
+
 // GET request to /users
 router('GET', '^/users$', function() {
     echo '<a href="users/1000">Show user: 1000</a>';
@@ -39,8 +55,8 @@ router('GET', '^/users$', function() {
 
 // With named parameters
 router('GET', '^/users/(?<id>\d+)$', function($params) {
-    echo "You selected User-ID: ";
-    var_dump($params);
+    echo "You selected User-ID: ".$params['id'];
+    // var_dump($params);
 });
 
 // POST request to /users

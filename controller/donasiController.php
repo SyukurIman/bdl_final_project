@@ -24,4 +24,20 @@ class DonasiController{
 
         return include "../view/donasi/index.php";
     }
+
+    public function update($id){
+        $parent = "Donasi";
+        $position = "Form Update";
+        $conn =  $this->db->connect();
+
+        $sql = "SELECT * FROM data_donasi WHERE id_data_donasi = ".$id;
+        $result = mysqli_query($conn, $sql);
+        $data = mysqli_fetch_all($result);
+
+        return include "../view/donasi/index.php";
+    }
+
+    public function save_update($data){
+        var_dump($data);
+    }
 }

@@ -1,9 +1,14 @@
 <script>
 var data = ( function () {
-
+    var table = function(){
+        $('#table').DataTable();
+    }
+   
     return {
         init: function () {
-
+            <?php if($position == 'Home') { ?> 
+                table();
+            <?php } ?>
         },
     };
 })()

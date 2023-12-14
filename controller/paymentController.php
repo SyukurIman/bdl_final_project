@@ -11,7 +11,12 @@ class PaymentController{
         $parent = "Payment";
         $position = "Home";
 
-        $sql = "SELECT * FROM payment";
+        $sql = "SELECT p.id, u.email, d.judul_donasi, p.created_at, p.price, p.payment_status
+        FROM payments p
+        LEFT JOIN data_donasi d ON p.id_donasi = d.id_data_donasi
+        LEFT JOIN users u ON p.id_user = u.id
+        ORDER BY p.created_at DESC;
+        ";
         $result = mysqli_query($conn, $sql);
         $data = mysqli_fetch_all($result);
 
