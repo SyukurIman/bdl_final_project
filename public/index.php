@@ -35,6 +35,11 @@ router('POST', '^/payment/filter/$', function(){
     $data = json_decode(file_get_contents('php://input'), true);
     echo $GLOBALS['Payment']->filters($data);
 });
+router('POST', '^/payment/top_donasi/$', function(){
+    header('Content-Type: application/json');
+    $data = json_decode(file_get_contents('php://input'), true);
+    echo $GLOBALS['Payment']->topDonasi($data);
+});
 
 router('GET', '^/donasi$', function(){
     $GLOBALS['Donasi']->index();
@@ -75,6 +80,8 @@ router('POST', '^/donasi/filter/$', function(){
     $data = json_decode(file_get_contents('php://input'), true);
     echo $GLOBALS['Donasi']->filters($data);
 });
+
+
 
 header("HTTP/1.0 404 Not Found");
 echo '404 Not Found';
