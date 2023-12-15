@@ -102,6 +102,33 @@ class PaymentController{
         return json_encode($msg);
     }
 
+    public function topDonasi($data){
+        $tanggal_awal = $data['tanggal_awal'] != "" ? "'".$data['tanggal_awal'] ." 00:00:00'": '' ;
+        $tanggal_akhir = $data['tanggal_akhir'] != "" ? "'".$data['tanggal_akhir'] ." 00:00:00'": '';
+
+        $sql = "SELECT p.id, u.email, d.judul_donasi, p.created_at, p.price, p.payment_status
+        FROM payments p
+        LEFT JOIN data_donasi d ON p.id_donasi = d.id_data_donasi
+        LEFT JOIN users u ON p.id_user = u.id
+        WHERE p.created_at >= '".$tanggal_awal."' AND p.created_at <= '".$tanggal_akhir."' AND p.payment_status = 2
+        AND p.price > (
+            SELECT AVG(price)
+            FROM payments
+            WHERE created_at >= '".$tanggal_awal."' AND created_at <= '".$tanggal_akhir."' AND payment_status = 2
+        )
+        ORDER BY p.price DESC";
+
+        $msg = [
+            'title' => 'Sukses',
+            'type' => 'success',
+            'text' => 'Data Berhasil di Perbarui',
+            'icon' => 'success',
+            'ButtonColor' => '#66BB6A',
+            'sql' => $sql
+        ];
+        return json_encode($msg);
+    }
+
     public function set_table_payment($sql){
         $conn = $this->db_payment->connect();
 

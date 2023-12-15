@@ -143,13 +143,63 @@ var data = ( function () {
             console.log(JSON.stringify(data_new) )
         })
     }
-   
+    var topDonasi = function(){
+        // check
+        $(document).on('click', '#submit_top_donasi', function(){
+            var data_new = {
+                'tanggal_awal' : $('#tanggal_awal').val(),
+                'tanggal_akhir' : $('#tanggal_akhir').val(),
+            }
+
+            $.ajax({
+                url : "/payment/top_donasi/",
+                type : "POST",
+                data : JSON.stringify(data_new),
+                processData: false,
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function(){
+                    swal.fire({
+                        html: '<h5>Loading...</h5>',
+                        showConfirmButton: false
+                    });
+                },
+                success: function(result_ajax){
+                    if(result_ajax.type == 'success'){
+                        swal.fire({
+                            title: result_ajax.title,
+                            text : result_ajax.text,
+                            confirmButtonColor: result_ajax.ButtonColor,
+                            type : result_ajax.type,
+                        }).then((result) => {
+                            $('#top_donasi').modal('hide');
+                            $('#sql').val(result_ajax.sql);
+                           
+                            // window.data_sql = { "sql" : result_ajax.sql};
+                            console.log($('#sql').val());
+                            $('#table').DataTable().ajax.reload();
+                        });
+                    }else{
+                        swal.fire({
+                            title: result.title,
+                            text : result.text,
+                            confirmButtonColor: result.ButtonColor,
+                            type : result.type,
+                        });
+                    }
+                }
+            });
+
+            console.log(JSON.stringify(data_new) )
+        })
+    }
+
     return {
         init: function () {
             <?php if($position == 'Home') { ?> 
               table();
               click_filter();
               filter();
+              topDonasi();
             <?php } ?>
         },
     };
