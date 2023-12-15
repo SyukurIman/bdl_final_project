@@ -23,10 +23,97 @@ class PaymentController{
         return include "../view/payment/index.php";
     }
 
+    public function data_payment($sql){
+        if($sql != "") {
+            return $this->set_table_payment($sql);
+        }
+        $sql = "SELECT p.id, u.email, d.judul_donasi, p.created_at, p.price, p.payment_status
+                FROM payments p
+                LEFT JOIN data_donasi d ON p.id_donasi = d.id_data_donasi
+                LEFT JOIN users u ON p.id_user = u.id
+                ORDER BY p.created_at DESC;
+                ";
+        return $this->set_table_payment($sql);
+    }
+
+    public function create(){
+        $parent = "Payment";
+        $position = "Form Create";
+
+        return include "../view/payment/index.php";
+    }
+
     public function update_view(){
         $parent = "Payment";
         $position = "Form Update";
 
         return include "../view/payment/index.php";
+    }
+
+    public function filters($data){
+        $sql = "SELECT p.id, u.email, d.judul_donasi, p.created_at, p.price, p.payment_status
+                FROM payments p
+                LEFT JOIN data_donasi d ON p.id_donasi = d.id_data_donasi
+                LEFT JOIN users u ON p.id_user = u.id";
+        $data_min_nominal = $data['min_nominal'] != "" ? " p.price > ".$data['min_nominal'] : '';
+        $data_max_nominal = $data['max_nominal'] != "" ? " p.price < ".$data['max_nominal'] : '';
+        $sql_nominal = "";
+        $data_min_tgl_donasi = $data['min_tgl_donasi'] != '' ? $data['min_tgl_donasi'] : '';
+        $data_max_tgl_donasi = $data['max_tgl_donasi'] != '' ? $data['max_tgl_donasi'] : '';
+
+        if ($data_min_nominal != "" && $data_max_nominal != "") {
+            $sql_nominal = $data_min_nominal." AND ".$data_max_nominal;
+        }
+
+        if ($data_min_nominal != "" || $data_max_nominal != ""){
+            if ($sql_nominal != "") {
+                $sql = $sql." WHERE ".$sql_nominal;
+            } else if ($data_min_nominal != '') {
+                $sql = $sql." WHERE ".$data_min_nominal;
+            } else if ($data_max_nominal != "") {
+                $sql = $sql." WHERE ".$data_max_nominal;
+            }
+        }
+
+        
+        $msg = [
+            'title' => 'Sukses',
+            'type' => 'success',
+            'text' => 'Data Berhasil di Perbarui',
+            'icon' => 'success',
+            'ButtonColor' => '#66BB6A',
+            'sql' => $sql
+        ];
+        return json_encode($msg);
+    }
+
+    public function set_table_payment($sql){
+        $conn = $this->db_payment->connect();
+
+        // Function of set data in donasi table
+        $result = mysqli_query($conn, $sql);
+        $data = mysqli_fetch_all($result);
+
+        $data_json = [];
+        $j = 1;
+        for ($i = 0; $i < count($data); $i++) { 
+            $btn_aksi = '<div class="text-center">
+                            <div class="btn-group btn-group-solid mx-2">
+                                <a href="/payment/update/'.$data[$i][0].'" class="btn btn-warning btn-raised btn-xs" id="btn-ubah" title="Ubah"><i class="icon-edit"></i></a>
+                            </div>
+                        </div>';
+
+            $data_json[] = [
+                'id' => $data[$i][0],
+                'DT_RowIndex' => $j++,
+                'action' => $btn_aksi,
+                'email_user' => $data[$i][1],
+                'nama_donasi' => $data[$i][2],
+                'tgl_transaksi' => $data[$i][3],
+                'nominal' => "Rp. ".number_format($data[$i][4], 2),
+                'status_pembayaran' => $data[$i][5] == 1 ? 'Menunggu Pembayaran' : ($data[$i][5] == 2 ? 'Pembayaran Berhasil' : 'Pembayaran Expired')
+            ];
+        } 
+        return json_encode(["draw"=>1, "recordsFiltered" => count($data),"recordsTotal" => count($data), "data" => $data_json, "start" => "0"]);
     }
 }

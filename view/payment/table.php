@@ -18,6 +18,36 @@
           </div>
         </div>
       </div>
+      <div class="filter" style="display: none;">
+        <form action="" method="post" id="form_filter">
+          <input type="hidden" name="sql" id="sql">
+          <div class="row px-4">
+            <div class="col-lg-6 col-md-6 mb-md-0 mb-4 row">
+              <div class="col mt-2">
+                <label class="form-label" for="min_nominal" >Minimum Nominal Pembayaran</label>
+                <input class="form-control input_form" type="number" name="min_nominal" id="min_nominal">
+              </div>
+              <div class="col mt-2">
+                <label class="form-label" for="max_nominal" >Maximum Nominal Pembayaran</label>
+                <input class="form-control input_form" type="number" name="max_nominal" id="max_nominal">
+              </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 mb-md-0 mb-4 row">
+              <div class="col mt-2">
+                <label class="form-label" for="min_tgl_donasi" >Minimum Batas Donasi </label>
+                <input class="form-control input_form" type="date" name="min_tgl_donasi" id="min_tgl_donasi">
+              </div>
+              <div class="col mt-2">
+                <label class="form-label" for="max_tgl_donasi" >Maximum Batas Donasi </label>
+                <input class="form-control input_form" type="date" name="max_tgl_donasi" id="max_tgl_donasi">
+              </div>
+            </div>
+
+          </div>
+            
+        </form>
+      </div>
       <div class="card-body m-3 px-2 p-2">
         <div class="table-responsive ">
           <table class="table align-items-center mb-0" id="table" style="width: 100%">
@@ -47,24 +77,7 @@
               </tr>
             </thead>
             <tbody>
-            <?php $i = 1; ?>
-                <?php for ($i = 0; $i < count($data); $i++) { ?>
-                    <tr>
-                        <td><?= $i+1 ?></td>
-                        <td>
-                            <div class="text-center">
-                                <div class="btn-group btn-group-solid mx-2">
-                                    <a href="/payment/update/<?php echo $data[$i][0] ?>" class="btn btn-warning btn-raised btn-xs" id="btn-ubah" title="Ubah"><i class="icon-edit"></i></a>
-                                </div>
-                            </div>
-                        </td>
-                        <td><?php echo $data[$i][1] ?></td>
-                        <td><?php echo $data[$i][2] ?></td>
-                        <td><?php echo $data[$i][3] ?></td>
-                        <td>RP. <?php echo number_format($data[$i][4], 2) ?></td>
-                        <td><?php echo $data[$i][5] == 1 ? 'Menunggu Pembayaran' : ($data[$i][5] == 2 ? 'Pembayaran Berhasil' : 'Pembayaran Expired') ?></td>
-                    </tr>
-                <?php } ?>
+                
             </tbody>
           </table>
         </div>

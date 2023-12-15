@@ -10,6 +10,7 @@ $GLOBALS['db'] = new Database_conect();
 $GLOBALS['db']->connect();
 
 $GLOBALS['Donasi'] = new DonasiController($GLOBALS['db']);
+$GLOBALS['Payment'] = new PaymentController($GLOBALS['db']);
 
 
 // Default index page
@@ -21,6 +22,18 @@ router('GET', '^/$', function(){
 router('GET', '^/payment$', function() {
     $Payment = new PaymentController($GLOBALS['db']);
     $Payment->index();
+});
+
+router('POST', '^/payment/get_data/$', function(){
+    header('Content-Type: application/json');
+    $data = $_POST['sql'];
+    echo $GLOBALS['Payment']->data_payment($data);
+});
+
+router('POST', '^/payment/filter/$', function(){
+    header('Content-Type: application/json');
+    $data = json_decode(file_get_contents('php://input'), true);
+    echo $GLOBALS['Payment']->filters($data);
 });
 
 router('GET', '^/donasi$', function(){

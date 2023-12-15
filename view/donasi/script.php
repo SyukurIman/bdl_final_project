@@ -24,7 +24,7 @@ var data = ( function () {
                 text: '<i class="fa fa-file-excel-o"></i> Cetak',
                 titleAttr: 'Cetak',
                 exportOptions: {
-                    columns: ':visible',
+                    columns: '0, 2, 3, 4, 5, 6',
                     modifier: {
                         page: 'current'
                     }
@@ -75,21 +75,6 @@ var data = ( function () {
         });
         cetak(t)
     }
-
-    // var setDataTable = function(){
-    //     $.ajax({
-    //         url: "/donasi/get_data",
-    //         type: "GET",
-    //         success: function(result) {
-    //             $('#table_body').empty();
-    //             if (result.type == 'success') {
-    //                 $(result.data).appendTo('#table_body');
-    //                 table();
-    //             }
-    //         }
-    //     });
-        
-    // }
 
     var cetak = function(t){
         $("#download_btn").on("click", function() {

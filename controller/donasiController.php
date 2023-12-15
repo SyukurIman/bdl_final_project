@@ -7,14 +7,6 @@ class DonasiController{
     }
 
     public function index() {
-        $conn =  $this->db->connect();
-        $parent = "Donasi";
-        $position = "Home";
-
-        $sql = "SELECT d.id_data_donasi, d.judul_donasi, d.deskripsi_donasi, d.target, d.gambar_donasi, d.batas_waktu_donasi, (SELECT SUM(p.price) FROM payments p WHERE d.id_data_donasi = p.id_donasi AND p.payment_status = 2 ) AS total_donasi FROM data_donasi d";
-        $result = mysqli_query($conn, $sql);
-        // $data = mysqli_fetch_all($result);
-
         return include "../view/donasi/index.php";
     }
 
