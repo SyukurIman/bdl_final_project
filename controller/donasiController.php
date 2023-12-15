@@ -7,6 +7,9 @@ class DonasiController{
     }
 
     public function index() {
+        $parent = "Donasi";
+        $position = "Home";
+
         return include "../view/donasi/index.php";
     }
 
