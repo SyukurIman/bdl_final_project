@@ -59,7 +59,8 @@ router('POST', '^/donasi/delete/$', function(){
 
 router('POST', '^/donasi/filter/$', function(){
     header('Content-Type: application/json');
-    echo $GLOBALS['Donasi']->filters();
+    $data = json_decode(file_get_contents('php://input'), true);
+    echo $GLOBALS['Donasi']->filters($data);
 });
 
 header("HTTP/1.0 404 Not Found");

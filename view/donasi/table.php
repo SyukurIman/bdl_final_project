@@ -32,7 +32,7 @@
               </div>
               <div class="col mt-2">
                 <label class="form-label" for="max_nominal" >Maximum Target Nominal</label>
-                <input class="form-control input_form" type="number" name="min_nominal" id="max_nominal">
+                <input class="form-control input_form" type="number" name="max_nominal" id="max_nominal">
               </div>
             </div>
 
