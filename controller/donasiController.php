@@ -246,6 +246,7 @@ class DonasiController{
             $btn_aksi = '<div class="text-center">
                             <div class="btn-group btn-group-solid mx-2">
                                 <a href="/donasi/update/'.$data[$i][0].'" class="btn btn-warning btn-raised btn-xs" id="btn-ubah" title="Ubah"><i class="icon-edit"></i></a> &nbsp;
+                                <a href="/donasi/payment/'.$data[$i][0].'" class="btn btn-secondary btn-raised btn-xs" id="btn-pay" title="Pay"><i class="icon-diamond"></i> </a> &nbsp;
                                 <button class="btn btn-danger btn-raised btn-xs" id="btn-hapus" title="Hapus" data-id="'.$data[$i][0].'"><i class="icon-trash"></i></button>
                             </div>
                         </div>';

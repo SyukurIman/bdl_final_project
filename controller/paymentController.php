@@ -43,10 +43,25 @@ class PaymentController{
         return include "../view/payment/index.php";
     }
 
-    public function update_view(){
+    public function save_create(){
+
+    }
+
+    public function update($id){
         $parent = "Payment";
         $position = "Form Update";
 
+        $conn =  $this->db_payment->connect();
+
+        $sql = "SELECT p.id, d.judul_donasi, p.nama_donatur, 
+                (SELECT u.email FROM users u WHERE p.id_user = u.id) 
+                as email, p.payment_status, p.price, p.dukungan
+                FROM payments p 
+                LEFT JOIN data_donasi d
+                ON p.id_donasi = d.id_data_donasi 
+                WHERE id = ".$id;
+        $result = mysqli_query($conn, $sql);
+        $data_payment = mysqli_fetch_all($result);
         return include "../view/payment/index.php";
     }
 

@@ -30,6 +30,10 @@ router('POST', '^/payment/get_data/$', function(){
     echo $GLOBALS['Payment']->data_payment($data);
 });
 
+router('GET', '^/payment/update/(?<id>\d+)$', function($params){
+    $GLOBALS['Payment']->update($params['id']);
+});
+
 router('POST', '^/payment/filter/$', function(){
     header('Content-Type: application/json');
     $data = json_decode(file_get_contents('php://input'), true);
