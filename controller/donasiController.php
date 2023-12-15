@@ -230,7 +230,7 @@ class DonasiController{
         $msg = [
             'title' => 'Sukses',
             'type' => 'success',
-            'text' => 'Data Berhasil Dihapus',
+            'text' => 'Data Berhasil di Perbarui',
             'icon' => 'success',
             'ButtonColor' => '#66BB6A',
             'sql' => $sql
