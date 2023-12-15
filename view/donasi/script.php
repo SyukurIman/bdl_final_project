@@ -5,30 +5,91 @@ var data = ( function () {
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = String(today.getFullYear());
     var time = today.getHours() + "." + today.getMinutes();
-
-
     today = 'Result_Donasi_'+mm + '-' + dd + '-' + yyyy+"_"+time;
 
     console.log(today)
+    
     var table = function(){
         var t = $('#table').DataTable({
+            processing: true,
+            pageLength: 5,
+            searching: true,
+            bLengthChange: true,
+            lengthMenu: [ [5, 25, 50, -1], [5, 25, 50, "Semua"] ],
+            destroy : true,
+            dom: 'Blfrtip',
             buttons: [{
                 extend: 'excel',
                 title: today,
                 text: '<i class="fa fa-file-excel-o"></i> Cetak',
                 titleAttr: 'Cetak',
                 exportOptions: {
-                    columns: '0, 2, 3, 4, 5, 6',
+                    columns: ':visible',
                     modifier: {
                         page: 'current'
                     }
                 }
             }],
+            'ajax': {
+                "url": "/donasi/get_data/",
+                "method": "POST",
+                "data": function(d){
+                    d.sql = $("#sql").val()
+                },
+                "complete": function () {
+                    $('.buttons-excel').hide();
+                    swal.close();
+                    console.log($('#sql').val())
+                    $('#sql').val(" ");
+                    console.log("Sql_t"+$('#sql').val())
+                }
+            },
+            'columns': [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', class: 'text-center', orderable: false, searchable: false },
+                { data: 'action', name: 'action', class: 'text-center', orderable: false, searchable: false },
+                { data: 'judul_donasi', name: 'judul_donasi', class: 'text-left' },
+                { data: 'batas_waktu_donasi', name: 'batas_waktu_donasi', class: 'text-left' },
+                { data: 'deskripsi_donasi', name: 'deskripsi_donasi', class: 'text-left' },
+                { data: 'target', name: 'target', class: 'text-left' },
+                { data: 'nominal_terkumpul', name: 'nominal_terkumpul', class: 'text-left' },
+                        
+            ],
+            "order": [],
+            "columnDefs": [
+                { "orderable": false, "targets": [0] }
+            ],
+            "language": {
+                "lengthMenu": "Menampilkan _MENU_ data",
+                "search": "Cari:",
+                "zeroRecords": "Data tidak ditemukan",
+                "paginate": {
+                    "first":      "Pertama",
+                    "last":       "Terakhir",
+                    "next":       "Selanjutnya",
+                    "previous":   "Sebelumnya"
+                },
+                "info": "Menampilkan halaman _PAGE_ dari _PAGES_",
+                "infoEmpty": "Data kosong",
+                "infoFiltered": "(Difilter dari _MAX_ total data)"
+            }
         });
         cetak(t)
-
-        
     }
+
+    // var setDataTable = function(){
+    //     $.ajax({
+    //         url: "/donasi/get_data",
+    //         type: "GET",
+    //         success: function(result) {
+    //             $('#table_body').empty();
+    //             if (result.type == 'success') {
+    //                 $(result.data).appendTo('#table_body');
+    //                 table();
+    //             }
+    //         }
+    //     });
+        
+    // }
 
     var cetak = function(t){
         $("#download_btn").on("click", function() {
@@ -79,7 +140,7 @@ var data = ( function () {
                                         confirmButtonColor: result.ButtonColor,
                                         type: result.type,
                                     }).then((result) => {
-                                        location.href = '/donasi';
+                                        $('#table').DataTable().ajax.reload();
                                     });
                                 } else {
                                     swal.fire({
@@ -235,15 +296,18 @@ var data = ( function () {
                         showConfirmButton: false
                     });
                 },
-                success: function(result){
-                    if(result.type == 'success'){
+                success: function(result_ajax){
+                    if(result_ajax.type == 'success'){
                         swal.fire({
-                            title: result.title,
-                            text : result.text,
-                            confirmButtonColor: result.ButtonColor,
-                            type : result.type,
+                            title: result_ajax.title,
+                            text : result_ajax.text,
+                            confirmButtonColor: result_ajax.ButtonColor,
+                            type : result_ajax.type,
                         }).then((result) => {
-                            
+                            $('#sql').val(result_ajax.sql);
+                            // window.data_sql = { "sql" : result_ajax.sql};
+                            console.log($('#sql').val())
+                            $('#table').DataTable().ajax.reload();
                         });
                     }else{
                         swal.fire({

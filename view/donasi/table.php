@@ -23,6 +23,7 @@
       </div>
       <div class="filter" style="display: none;">
         <form action="" method="post" id="form_filter">
+          <input type="hidden" name="sql" id="sql">
           <div class="row px-4">
             <div class="col-lg-6 col-md-6 mb-md-0 mb-4 row">
               <div class="col mt-2">
@@ -78,27 +79,7 @@
                 </th>
               </tr>
             </thead>
-            <tbody>
-                <?php $i = 1; ?>
-                <?php for ($i = 0; $i < count($data); $i++) { ?>
-                    <tr>
-                        <td><?= $i+1 ?></td>
-                        <td>
-                            <div class="text-center">
-                                <div class="btn-group btn-group-solid mx-2">
-                                    <a href="/donasi/update/<?php echo $data[$i][0] ?>" class="btn btn-warning btn-raised btn-xs" id="btn-ubah" title="Ubah"><i class="icon-edit"></i></a> &nbsp;
-                                    <button class="btn btn-danger btn-raised btn-xs" id="btn-hapus" title="Hapus" data-id="<?php echo $data[$i][0] ?>"><i class="icon-trash"></i></button>
-                                </div>
-                            </div>
-                        </td>
-                        <td><?php echo $data[$i][1] ?></td>
-                        <td><?php echo $data[$i][5] ?></td>
-                        <td><?php echo $data[$i][2] ?></td>
-                        <td>RP. <?php echo number_format($data[$i][3], 2) ?></td>
-                        <td>Rp. <?php echo number_format($data[$i][6], 2) ?></td>
-                        <!-- <td style="display: none;"><?= $data[$i][0] ?></td> -->
-                    </tr>
-                <?php } ?>
+            <tbody id="table_body">
             </tbody>
           </table>
         </div>

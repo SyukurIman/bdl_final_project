@@ -13,9 +13,17 @@ class DonasiController{
 
         $sql = "SELECT d.id_data_donasi, d.judul_donasi, d.deskripsi_donasi, d.target, d.gambar_donasi, d.batas_waktu_donasi, (SELECT SUM(p.price) FROM payments p WHERE d.id_data_donasi = p.id_donasi AND p.payment_status = 2 ) AS total_donasi FROM data_donasi d";
         $result = mysqli_query($conn, $sql);
-        $data = mysqli_fetch_all($result);
+        // $data = mysqli_fetch_all($result);
 
         return include "../view/donasi/index.php";
+    }
+
+    public function data_donasi($sql){
+        if($sql != "") {
+            return $this->set_table_donasi($sql);
+        }
+        $sql = "SELECT d.id_data_donasi, d.judul_donasi, d.deskripsi_donasi, d.target, d.gambar_donasi, d.batas_waktu_donasi, (SELECT SUM(p.price) FROM payments p WHERE d.id_data_donasi = p.id_donasi AND p.payment_status = 2 ) AS total_donasi FROM data_donasi d";
+        return $this->set_table_donasi($sql);
     }
 
     public function create(){
@@ -61,7 +69,6 @@ class DonasiController{
             } 
         }
 
-        
         if ($result) {
             $msg = [
                 "title" => "Sukses",
@@ -158,33 +165,87 @@ class DonasiController{
         return json_encode($msg);
     }
 
+    public function delTree($dir){
+        $files = array_diff(scandir($dir), array('.', '..')); 
+        
+        foreach ($files as $file) { 
+            (is_dir("$dir/$file")) ? $this->delTree("$dir/$file") : unlink("$dir/$file"); 
+        }
+        return rmdir($dir); 
+    }
+
     public function delete($id){
         $conn = $this->db->connect();
 
-        $sql = "DELETE d.*, p.* FROM data_donasi d LEFT JOIN payments p ON d.id_data_donasi = p.id_donasi WHERE d.id_data_donasi = $id";
-        $result = mysqli_query($conn, $sql);
-        if ($result) {
-            $msg = [
-                "title" => "Sukses",
-                "type" => "success",
-                "text" => "Data Berhasil Dihapus",
-                "icon" => "success",
-                "ButtonColor" => "#66BB6A"
-            ];
-            return json_encode($msg);
-        } else {
-            $msg = [
-                "title" => "Gagal !!",
-                "type" => "error",
-                "text" => "Data Gagal Dihapus !!",
-                "icon" => "error",
-                "ButtonColor" => "#EF5350"
-            ];
-            return json_encode($msg);
+        $dir = __DIR__.'/../public/images/donasi/'.$id.'/';
+
+        if($this->delTree($dir)){
+            $sql = "DELETE d.*, p.* FROM data_donasi d LEFT JOIN payments p ON d.id_data_donasi = p.id_donasi WHERE d.id_data_donasi = $id";
+            $result = mysqli_query($conn, $sql);
+            if ($result) {
+                $msg = [
+                    'title' => 'Sukses',
+                    'type' => 'success',
+                    'text' => 'Data Berhasil Dihapus',
+                    'icon' => 'success',
+                    'ButtonColor' => '#66BB6A'
+                ];
+                return json_encode($msg);
+            } 
         }
+        
+        $msg = [
+            "title" => "Gagal !!",
+            "type" => "error",
+            "text" => "Data Gagal Dihapus !!",
+            "icon" => "error",
+            "ButtonColor" => "#EF5350"
+        ];
+        return json_encode($msg);
     }
 
     public function filters(){
+        
 
+        $sql = "SELECT d.id_data_donasi, d.judul_donasi, d.deskripsi_donasi, d.target, d.gambar_donasi, d.batas_waktu_donasi, (SELECT SUM(p.price) FROM payments p WHERE d.id_data_donasi = p.id_donasi AND p.payment_status = 2 ) AS total_donasi FROM data_donasi d";
+        $msg = [
+            'title' => 'Sukses',
+            'type' => 'success',
+            'text' => 'Data Berhasil Dihapus',
+            'icon' => 'success',
+            'ButtonColor' => '#66BB6A',
+            'sql' => $sql
+        ];
+        return json_encode($msg);
+    }
+
+    public function set_table_donasi($sql){
+        $conn = $this->db->connect();
+
+        // Function of set data in donasi table
+        $result = mysqli_query($conn, $sql);
+        $data = mysqli_fetch_all($result);
+
+        $data_json = [];
+        $j = 1;
+        for ($i = 0; $i < count($data); $i++) {
+            $btn_aksi = '<div class="text-center">
+                            <div class="btn-group btn-group-solid mx-2">
+                                <a href="/donasi/update/'.$data[$i][0].'" class="btn btn-warning btn-raised btn-xs" id="btn-ubah" title="Ubah"><i class="icon-edit"></i></a> &nbsp;
+                                <button class="btn btn-danger btn-raised btn-xs" id="btn-hapus" title="Hapus" data-id="'.$data[$i][0].'"><i class="icon-trash"></i></button>
+                            </div>
+                        </div>';
+            $data_json[] = [
+                'id' => $data[$i][0],
+                'DT_RowIndex' => $j++,
+                'action' => $btn_aksi,
+                'judul_donasi' => $data[$i][1],
+                'batas_waktu_donasi' => $data[$i][5],
+                'deskripsi_donasi' => $data[$i][2],
+                'target' => 'RP. '.number_format($data[$i][3], 2),
+                'nominal_terkumpul' => 'RP. '.number_format($data[$i][6], 2) 
+            ];
+        }
+        return json_encode(["draw"=>1, "recordsFiltered" => count($data),"recordsTotal" => count($data), "data" => $data_json, "start" => "6"]);
     }
 }
