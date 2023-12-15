@@ -201,8 +201,8 @@ class DonasiController{
 
     public function filters($data){
         $sql = "SELECT d.id_data_donasi, d.judul_donasi, d.deskripsi_donasi, d.target, d.gambar_donasi, d.batas_waktu_donasi, (SELECT SUM(p.price) FROM payments p WHERE d.id_data_donasi = p.id_donasi AND p.payment_status = 2 ) AS total_donasi FROM data_donasi d";
-        $data_min_nominal = $data['min_nominal'] != "" ? " d.target > ".$data['min_nominal'] : '';
-        $data_max_nominal = $data['max_nominal'] != "" ? " d.target < ".$data['max_nominal'] : '';
+        $data_min_nominal = $data['min_nominal'] != "" ? " d.target >= ".$data['min_nominal'] : '';
+        $data_max_nominal = $data['max_nominal'] != "" ? " d.target <= ".$data['max_nominal'] : '';
         $sql_nominal = "";
         $data_min_tgl_donasi = $data['min_tgl_donasi'] != '' ? $data['min_tgl_donasi'] : '';
         $data_max_tgl_donasi = $data['max_tgl_donasi'] != '' ? $data['max_tgl_donasi'] : '';
