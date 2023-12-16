@@ -10,6 +10,13 @@ class DonasiController{
         $parent = "Donasi";
         $position = "Home";
 
+        $conn =  $this->db->connect();
+
+        $tgl = date('Y-m-d');
+        $sql = "SELECT * FROM data_donasi WHERE batas_waktu_donasi >= '$tgl' ";
+        $result = mysqli_query($conn, $sql);
+        $data = mysqli_fetch_all($result);
+
         return include "../view/donasi/index.php";
     }
 
@@ -17,7 +24,11 @@ class DonasiController{
         if($sql != "") {
             return $this->set_table_donasi($sql);
         }
-        $sql = "SELECT d.id_data_donasi, d.judul_donasi, d.deskripsi_donasi, d.target, d.gambar_donasi, d.batas_waktu_donasi, (SELECT SUM(p.price) FROM payments p WHERE d.id_data_donasi = p.id_donasi AND p.payment_status = 2 ) AS total_donasi FROM data_donasi d";
+        $sql = "SELECT d.id_data_donasi, d.judul_donasi, d.deskripsi_donasi, d.target, d.gambar_donasi, d.batas_waktu_donasi, 
+        (SELECT SUM(p.price) 
+        FROM payments p 
+        WHERE d.id_data_donasi = p.id_donasi AND p.payment_status = 2 ) AS total_donasi 
+        FROM data_donasi d";
         return $this->set_table_donasi($sql);
     }
 
@@ -48,41 +59,39 @@ class DonasiController{
         $gambar_donasi = $final_image;
         $sql = $sql."INSERT INTO data_donasi (judul_donasi, deskripsi_donasi, target, batas_waktu_donasi, gambar_donasi) 
                     VALUES ('$judul_donasi', '$deskripsi_donasi', '$target', '$batas_waktu_donasi', '$gambar_donasi')";
-        
-        $result = mysqli_query($conn, $sql);
-        
-        if(in_array($ext, $valid_extensions)) { 
-            $id = $conn->insert_id;;
-            $path = __DIR__.'/../public/images/donasi/';
-
-            if (!file_exists($path.$id)) {
-                $path = $path.$id."/";
-                mkdir($path);
-
-                $path = $path.strtolower($final_image); 
-                move_uploaded_file($tmp,$path);
-            } 
-        }
-
-        if ($result) {
+        try {
+            mysqli_query($conn, $sql);
+            if(in_array($ext, $valid_extensions)) { 
+                $id = $conn->insert_id;;
+                $path = __DIR__.'/../public/images/donasi/';
+    
+                if (!file_exists($path.$id)) {
+                    $path = $path.$id."/";
+                    mkdir($path);
+    
+                    $path = $path.strtolower($final_image); 
+                    move_uploaded_file($tmp,$path);
+                } 
+            }
             $msg = [
                 "title" => "Sukses",
                 "type" => "success",
-                "text" => "Data Berhasil Ditambahkan",
+                "text" => "Data Berhasil Ditambahkan !!",
                 "icon" => "success",
                 "ButtonColor" => "#66BB6A"
             ];
             return json_encode($msg);
+        }catch (Exception $e){
+            $error = $e->getMessage();
+            $msg = [
+                "title" => "Gagal !!",
+                "type" => "error",
+                "text" => $error,
+                "icon" => "error",
+                "ButtonColor" => "#EF5350"
+            ];
+            return json_encode($msg);
         }
-
-        $msg = [
-            "title" => "Gagal !!",
-            "type" => "error",
-            "text" => "Data Gagal Ditambahkan",
-            "icon" => "error",
-            "ButtonColor" => "#EF5350"
-        ];
-        return json_encode($msg);
     }
 
     public function update($id){
@@ -138,8 +147,8 @@ class DonasiController{
         } 
         $sql = $sql."WHERE id_data_donasi='$id'";
         
-        $result = mysqli_query($conn, $sql);
-        if ($result) {
+        try {
+            mysqli_query($conn, $sql);
             $msg = [
                 "title" => "Sukses",
                 "type" => "success",
@@ -148,16 +157,19 @@ class DonasiController{
                 "ButtonColor" => "#66BB6A"
             ];
             return json_encode($msg);
+        }catch (Exception $e){
+            $error = $e->getMessage();
+            $msg = [
+                "title" => "Gagal !!",
+                "type" => "error",
+                "text" => $error,
+                "icon" => "error",
+                "ButtonColor" => "#EF5350"
+            ];
+            return json_encode($msg);
         }
 
-        $msg = [
-            "title" => "Gagal !!",
-            "type" => "error",
-            "text" => "Update Data Gagal !!",
-            "icon" => "error",
-            "ButtonColor" => "#EF5350"
-        ];
-        return json_encode($msg);
+        
     }
 
     public function delTree($dir){
@@ -172,22 +184,31 @@ class DonasiController{
     public function delete($id){
         $conn = $this->db->connect();
 
-        $dir = __DIR__.'/../public/images/donasi/'.$id.'/';
-
-        if($this->delTree($dir)){
-            $sql = "DELETE d.*, p.* FROM data_donasi d LEFT JOIN payments p ON d.id_data_donasi = p.id_donasi WHERE d.id_data_donasi = $id";
-            $result = mysqli_query($conn, $sql);
-            if ($result) {
-                $msg = [
-                    'title' => 'Sukses',
-                    'type' => 'success',
-                    'text' => 'Data Berhasil Dihapus',
-                    'icon' => 'success',
-                    'ButtonColor' => '#66BB6A'
-                ];
-                return json_encode($msg);
-            } 
+        $sql = "DELETE d.*, p.* FROM data_donasi d LEFT JOIN payments p ON d.id_data_donasi = p.id_donasi WHERE d.id_data_donasi = $id";
+        try {
+            mysqli_query($conn, $sql);
+            $dir = __DIR__.'/../public/images/donasi/'.$id.'/';
+            $this->delTree($dir);
+            $msg = [
+                "title" => "Sukses",
+                "type" => "success",
+                "text" => "Data Berhasil Dihapus !!",
+                "icon" => "success",
+                "ButtonColor" => "#66BB6A"
+            ];
+            return json_encode($msg);
+        }catch (Exception $e){
+            $error = $e->getMessage();
+            $msg = [
+                "title" => "Gagal !!",
+                "type" => "error",
+                "text" => $error,
+                "icon" => "error",
+                "ButtonColor" => "#EF5350"
+            ];
+            return json_encode($msg);
         }
+
         
         $msg = [
             "title" => "Gagal !!",
@@ -239,6 +260,7 @@ class DonasiController{
         // Function of set data in donasi table
         $result = mysqli_query($conn, $sql);
         $data = mysqli_fetch_all($result);
+        $tgl = date('Y-m-d');
 
         $data_json = [];
         $j = 1;
@@ -250,12 +272,13 @@ class DonasiController{
                                 <button class="btn btn-danger btn-raised btn-xs" id="btn-hapus" title="Hapus" data-id="'.$data[$i][0].'"><i class="icon-trash"></i></button>
                             </div>
                         </div>';
+            $tgl_batas_donasi = $tgl <= $data[$i][5] ? $data[$i][5]." (Aktif)" : $data[$i][5]." (Non Aktif) ";
             $data_json[] = [
                 'id' => $data[$i][0],
                 'DT_RowIndex' => $j++,
                 'action' => $btn_aksi,
                 'judul_donasi' => $data[$i][1],
-                'batas_waktu_donasi' => $data[$i][5],
+                'batas_waktu_donasi' => $tgl_batas_donasi,
                 'deskripsi_donasi' => $data[$i][2],
                 'target' => 'RP. '.number_format($data[$i][3], 2),
                 'nominal_terkumpul' => 'RP. '.number_format($data[$i][6], 2) 

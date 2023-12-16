@@ -41,7 +41,7 @@ var data = ( function () {
                     swal.close();
                     console.log($('#sql').val())
                     $('#sql').val(" ");
-                    console.log("Sql_t"+$('#sql').val())
+                    console.log("Sql"+$('#sql').val())
                 }
             },
             'columns': [
@@ -143,6 +143,7 @@ var data = ( function () {
             console.log(JSON.stringify(data_new) )
         })
     }
+
     var topDonasi = function(){
         // check
         $(document).on('click', '#submit_top_donasi', function(){
@@ -193,6 +194,107 @@ var data = ( function () {
         })
     }
 
+    var create = function(){
+        $('#simpan').on('click', function(e) {
+            e.preventDefault();
+            swal.fire({
+                title: 'Apakah Anda Yakin?',
+                text: 'Menyimpan Data Ini',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2196F3',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak'
+            })
+            .then((result) => {
+                if (result.value) {
+                    var formdata = $(this).serialize();
+                    valid = true
+                    var err = 0;
+                    $('.help-block').hide();
+                    $('.form-error').removeClass('form-error');
+                    $('#form-data').find('input, textarea').each(function(){
+                        if($(this).prop('required')){
+                            if(err == 0){
+                                if($(this).val() == ""){
+                                    valid = false;
+                                    real = this.name;
+                                    title = $('label[for="' + this.name + '"]').html();
+                                    type = '';
+                                    if($(this).is("input")){
+                                        type = 'diisi';
+                                    }else{
+                                        type = 'pilih';
+                                    }
+                                    err++;
+                                }
+                            }
+                        }
+                    })
+                    if(!valid){
+                        if(type == 'diisi'){
+                            $("input[name="+real+"]").addClass('form-error');
+                            $($("input[name="+real+"]").closest('div').find('.help-block')).html(title + 'belum ' + type);
+                            $($("input[name="+real+"]").closest('div').find('.help-block')).show();
+                        } else{
+                            $("textarea[name="+real+"]").addClass('form-error');
+                            $($("textarea[name="+real+"]").closest('div').find('.help-block')).html(title + 'belum ' + type);
+                            $($("textarea[name="+real+"]").closest('div').find('.help-block')).show();
+                        }
+    
+                        swal.fire({
+                            text : title + 'belum ' + type,
+                            type : "error",
+                            confirmButtonColor: "#EF5350",
+                        });
+                    } else{
+                        var formData = new FormData($('#form-data')[0]);
+                        $.ajax({
+                            url : "<?= $route_name ?> ",
+                            type : "POST",
+                            data : formData,
+                            processData: false,
+                            contentType: false,
+                            beforeSend: function(){
+                                swal.fire({
+                                    html: '<h5>Loading...</h5>',
+                                    showConfirmButton: false
+                                });
+                            },
+                            success: function(result){
+                                if(result.type == 'success'){
+                                    swal.fire({
+                                        title: result.title,
+                                        text : result.text,
+                                        confirmButtonColor: result.ButtonColor,
+                                        type : result.type,
+                                    }).then((result) => {
+                                        location.href = "";
+                                    });
+                                }else{
+                                    swal.fire({
+                                        title: result.title,
+                                        text : result.text,
+                                        confirmButtonColor: result.ButtonColor,
+                                        type : result.type,
+                                    });
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    swal.fire({
+                        text : 'Aksi Dibatalkan!',
+                        type : "info",
+                        confirmButtonColor: "#EF5350",
+                    });
+                }
+            });
+        });
+    }
+
+    
+
     return {
         init: function () {
             <?php if($position == 'Home') { ?> 
@@ -201,6 +303,8 @@ var data = ( function () {
               filter();
               topDonasi();
             <?php } ?>
+
+            create()
         },
     };
 })()

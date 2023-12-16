@@ -13,7 +13,7 @@
 
 
                 <form id="form-data" method="post" autocompleted="off" enctype="multipart/form-data">
-
+                    <input type="hidden" name="id_payment" value="<?= $data_payment[0][0]?>">
                     <div class="form-group row">
                         <div class="col-6 mt1">
                             <label for="id_donasi">Nama Donasi</label>
@@ -27,7 +27,7 @@
       
                         <div class="col-6 mt1">
                             <label for="name_donasi">Nama Donatur</label>
-                            <input class="form-control input_form" type="text" name="nama_donasi" disabled value="<?= $data_payment[0][2] ?>">
+                            <input class="form-control input_form" type="text" name="nama_donasi" value="<?= $data_payment[0][2] ?>">
                         </div>
                 
                         <div class="col-6 mt1">
@@ -49,12 +49,12 @@
                         </div>
 
                         <div class="col mt-1">
-                            <label for="dukungan">Status Pembayaran</label>
-                            <textarea class="form-control input_form" name="dukungan" id="dukungan" disabled rows="10"><?= $data_payment[0][6] ?></textarea>
+                            <label for="dukungan">Dukungan Donatur</label>
+                            <textarea class="form-control input_form" name="dukungan" id="dukungan" rows="10"><?= $data_payment[0][6] ?></textarea>
                         </div>
                     </div>
                 
-                    <input class="btn btn-primary" type="submit" value="Update">
+                    <input class="btn btn-primary" type="button" id="simpan" value="Update">
                 </form>
             </div>
           </div>

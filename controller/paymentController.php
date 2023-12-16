@@ -36,15 +36,57 @@ class PaymentController{
         return $this->set_table_payment($sql);
     }
 
-    public function create(){
-        $parent = "Payment";
+    public function create($id){
+        $parent = "Donasi";
         $position = "Form Create";
+
+        $conn =  $this->db_payment->connect();
+
+        $sql = "SELECT d.*, (SELECT SUM(p.price) FROM payments p WHERE d.id_data_donasi = p.id_donasi AND p.payment_status = 2 ) AS total_donasi
+                FROM data_donasi d WHERE d.id_data_donasi=".$id;
+        $result = mysqli_query($conn, $sql);
+        $data_donasi = mysqli_fetch_all($result);
+
+        $sql = "SELECT * FROM users";
+        $result = mysqli_query($conn, $sql);
+        $data_user = mysqli_fetch_all($result);
 
         return include "../view/payment/index.php";
     }
 
     public function save_create(){
+        $conn =  $this->db_payment->connect();
 
+        $price = $_POST['price'];
+        $nama_donasi = isset($_POST['nama_donasi']) && $_POST['nama_donasi'] != "" ? $_POST['nama_donasi'] : "Orang Baik";
+        $id_user = $_POST['user'];
+        $dukungan = isset($_POST['dukungan']) ? $_POST['dukungan'] : "";
+        $payment_status = 1;
+        $id_donasi = $_POST['id_data_donasi'];
+
+        $sql = "INSERT INTO payments (id_donasi, price, payment_status, id_user, dukungan, nama_donatur)
+                VALUES ('$id_donasi', '$price', '$payment_status', '$id_user', '$dukungan', '$nama_donasi')";
+        
+        $result = mysqli_query($conn, $sql);
+        if ($result) {
+            $msg = [
+                "title" => "Sukses",
+                "type" => "success",
+                "text" => "Data Berhasil Ditambahkan",
+                "icon" => "success",
+                "ButtonColor" => "#66BB6A"
+            ];
+            return json_encode($msg);
+        }
+
+        $msg = [
+            "title" => "Gagal !!",
+            "type" => "error",
+            "text" => "Data Gagal Ditambahkan",
+            "icon" => "error",
+            "ButtonColor" => "#EF5350"
+        ];
+        return json_encode($msg);
     }
 
     public function update($id){
@@ -63,6 +105,40 @@ class PaymentController{
         $result = mysqli_query($conn, $sql);
         $data_payment = mysqli_fetch_all($result);
         return include "../view/payment/index.php";
+    }
+
+    public function save_update(){
+        $conn =  $this->db_payment->connect();
+
+        $nama_donasi = isset($_POST['nama_donasi']) ? $_POST['nama_donasi'] : "Orang Baik";
+        $dukungan = isset($_POST['dukungan']) ? $_POST['dukungan'] : "";
+        $payment_status = $_POST['payment_status'];
+        $id = $_POST['id_payment'];
+
+        $sql = "UPDATE payments SET nama_donatur='$nama_donasi', 
+                dukungan='$dukungan', payment_status='$payment_status'
+                WHERE id=".$id;
+        $result = mysqli_query($conn, $sql);
+        if ($result) {
+            $msg = [
+                "title" => "Sukses",
+                "type" => "success",
+                "text" => "Update Data Berhasil",
+                "icon" => "success",
+                "ButtonColor" => "#66BB6A"
+            ];
+            return json_encode($msg);
+        }
+
+        $msg = [
+            "title" => "Gagal !!",
+            "type" => "error",
+            "text" => "Update Data Gagal !!",
+            "icon" => "error",
+            "ButtonColor" => "#EF5350"
+        ];
+        return json_encode($msg);
+
     }
 
     public function filters($data){
