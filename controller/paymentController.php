@@ -37,7 +37,7 @@ class PaymentController{
     }
 
     public function create($id){
-        $parent = "Donasi";
+        $parent = "Payment";
         $position = "Form Create";
 
         $conn =  $this->db_payment->connect();

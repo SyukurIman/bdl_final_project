@@ -10,6 +10,32 @@ class AdminController{
         $parent = "Dashboard";
         $position = "Home";
 
+        $conn =  $this->db_dashboard->connect();
+
+        $sql = 'SELECT * FROM users';
+        $result = mysqli_query($conn, $sql);
+        $data_user = mysqli_fetch_all($result);
+
+        $sql = 'SELECT * FROM payments p ORDER BY p.created_at DESC';
+        $result = mysqli_query($conn, $sql);
+        $data_payment = mysqli_fetch_all($result);
+
+        $sql = 'SELECT SUM(p.price) FROM payments p WHERE p.payment_status = 2';
+        $result = mysqli_query($conn, $sql);
+        $sum_payment = mysqli_fetch_all($result);
+
+        $sql = "SELECT d.id_data_donasi, d.judul_donasi, 
+                d.deskripsi_donasi, d.target, d.gambar_donasi, d.batas_waktu_donasi, 
+                (SELECT SUM(p.price) 
+                FROM payments p 
+                WHERE d.id_data_donasi = p.id_donasi AND p.payment_status = 2 ) AS total_donasi,
+                (SELECT COUNT(p.price) 
+                FROM payments p 
+                WHERE d.id_data_donasi = p.id_donasi AND p.payment_status = 2 ) AS total_USER 
+                FROM data_donasi d ORDER BY d.created_at DESC";
+        $result = mysqli_query($conn, $sql);
+        $data_donasi = mysqli_fetch_all($result);
+
         return include "../view/dashboard/index.php";
     }
 
