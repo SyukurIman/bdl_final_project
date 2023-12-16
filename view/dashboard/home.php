@@ -102,7 +102,7 @@
                   Nominal Masuk
                 </p>
                 <h7 class="font-weight-bolder mb-0">
-                  Rp.<?= number_format($sum_payment[0][0], 2) ?>
+                  Rp. <?= isset($sum_payment) ? number_format($sum_payment[0][0], 2) : "0" ?>
                   <span class="text-success text-sm font-weight-bolder"
                     >&#177;</span
                   >
@@ -124,7 +124,9 @@
       </div>
     </div>
   </div>
-  <div class="row mt-4">
+
+  
+  <div class="row mt-4" id="data_donasi">
     <div class="col-lg-7 mb-lg-0 mb-4">
       <div class="card">
         <div class="card-body p-3">
@@ -132,7 +134,7 @@
             <div class="col-lg-6">
               <div class="d-flex flex-column h-100">
                 <p class="mb-1 pt-2 text-bold">Donasi Terbaru</p>
-                <h5 class="font-weight-bolder"><?= $data_donasi[0][1] ?></h5>
+                <h5 class="font-weight-bolder"><?= isset($data_donasi[0][1] ) ? $data_donasi[0][1] : 'None' ?></h5>
                 <p class="mb-5">
                   <?= $data_donasi[0][2] ?>
                 </p>
@@ -157,6 +159,7 @@
       </div>
     </div>
     
+    <?php if (isset($data_donasi[1][0])) { ?>
     <div class="col-lg-5">
       <div class="card h-100 p-3">
         <div
@@ -188,7 +191,9 @@
         </div>
       </div>
     </div>
+    <?php } ?>
   </div>
+
   <!-- <div class="row mt-4">
     <div class="col-lg-5 mb-lg-0 mb-4">
       <div class="card z-index-2">

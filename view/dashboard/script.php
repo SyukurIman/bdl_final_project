@@ -26,6 +26,10 @@ var data = ( function () {
             "infoFiltered": "(Difilter dari _MAX_ total data)"
         }
     });
+
+    <?php if (count($data_donasi) == 0) { ?>
+      $('#data_donasi').hide();
+    <?php } ?>
   }
 
   var create = function(){
