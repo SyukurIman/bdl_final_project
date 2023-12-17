@@ -170,7 +170,7 @@
           <div
             class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3"
           >
-            <p class="mb-0 pt-2 text-bold text-white">Donatur Terbaru</p>
+            <p class="mb-0 pt-2 text-bold text-white">Donasi Terbaru</p>
             <h5 class="text-white font-weight-bolder mb-1 pt-0">
               <?= $data_donasi[1][1] ?>
             </h5>
