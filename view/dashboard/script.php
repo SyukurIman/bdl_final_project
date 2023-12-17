@@ -27,7 +27,7 @@ var data = ( function () {
         }
     });
 
-    <?php if (count($data_donasi) == 0) { ?>
+    <?php if (isset($data_donasi) && count($data_donasi) == 0) { ?>
       $('#data_donasi').hide();
     <?php } ?>
   }
@@ -132,17 +132,17 @@ var data = ( function () {
   }
 
   var select_trigger = function(){
-      $('#status_trigger').on('change', function(){
-        let get_data = $(this).val()
-        if (get_data == "on") {
-          $('#start_time').prop('required',true);
-          $('#end_time').prop('required',true);
-        } else {
-          $('#start_time').prop('required',false);
-          $('#end_time').prop('required',false);
-        }
-      })
-    }
+    $('#status_trigger').on('change', function(){
+      let get_data = $(this).val()
+      if (get_data == "on") {
+        $('#start_time').prop('required',true);
+        $('#end_time').prop('required',true);
+      } else {
+        $('#start_time').prop('required',false);
+        $('#end_time').prop('required',false);
+      }
+    })
+  }
 
   return {
     init: function () {

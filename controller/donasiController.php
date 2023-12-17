@@ -272,12 +272,26 @@ class DonasiController{
                                 <button class="btn btn-danger btn-raised btn-xs" id="btn-hapus" title="Hapus" data-id="'.$data[$i][0].'"><i class="icon-trash"></i></button>
                             </div>
                         </div>';
+            $nama_donasi = '<div class="d-flex px-2 py-1">
+                                <div>
+                                <img
+                                    src="/../images/donasi/'.$data[$i][0].'/'.$data[$i][4].'"
+                                    class="avatar avatar-sm me-3"
+                                    alt="xd"
+                                />
+                                </div>
+                                <div
+                                class="d-flex flex-column justify-content-center"
+                                >
+                                <h6 class="mb-0 text-sm">'.$data[$i][1].'</h6>
+                                </div>
+                            </div>';
             $tgl_batas_donasi = $tgl <= $data[$i][5] ? $data[$i][5]." (Aktif)" : $data[$i][5]." (Non Aktif) ";
             $data_json[] = [
                 'id' => $data[$i][0],
                 'DT_RowIndex' => $j++,
                 'action' => $btn_aksi,
-                'judul_donasi' => $data[$i][1],
+                'judul_donasi' => $nama_donasi,
                 'batas_waktu_donasi' => $tgl_batas_donasi,
                 'deskripsi_donasi' => $data[$i][2],
                 'target' => 'RP. '.number_format($data[$i][3], 2),
