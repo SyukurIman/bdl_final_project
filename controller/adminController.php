@@ -20,7 +20,9 @@ class AdminController{
         $result = mysqli_query($conn, $sql);
         $data_payment = mysqli_fetch_all($result);
 
-        $sql = 'SELECT SUM(p.price) FROM payments p WHERE p.payment_status = 2';
+        $tgl_now = date('Y-m-d');
+        $tgl_start = date('Y-m-d', strtotime('-1 days', strtotime($tgl_now)));
+        $sql = "SELECT SUM(p.price) FROM payments p WHERE p.payment_status = 2 AND p.created_at >= $tgl_start ";
         $result = mysqli_query($conn, $sql);
         $sum_payment = mysqli_fetch_all($result);
 

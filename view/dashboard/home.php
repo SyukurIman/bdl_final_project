@@ -104,7 +104,7 @@
                 <h7 class="font-weight-bolder mb-0">
                   Rp. <?= isset($sum_payment) ? number_format($sum_payment[0][0], 2) : "0" ?>
                   <span class="text-success text-sm font-weight-bolder"
-                    >&#177;</span
+                    >&#177; Now</span
                   >
                 </h7>
               </div>
@@ -150,8 +150,8 @@
                 </a>
               </div>
             </div>
-            <div class="col-lg-6 ms-auto text-center mt-5 mt-lg-0">
-              <img width="250" class="col border-radius-lg h-100" src="<?= '/../images/donasi/'.$data_donasi[0][0].'/'.$data_donasi[0][4] ?>" alt="">
+            <div class="col-lg-6 ms-auto text-center mt-5 mt-lg-0 d-flex">
+              <img width="250" class="col border-radius-lg h-100 flex-end" src="<?= '/../images/donasi/'.$data_donasi[0][0].'/'.$data_donasi[0][4] ?>" alt="">
               
             </div>
           </div>
@@ -606,11 +606,12 @@
                       </div>
                       <div class="progress">
                         <div
-                          class="progress-bar bg-gradient-info w-<?php echo ceil((floatval( $data_donasi[$i][6]) / floatval( $data_donasi[$i][3])) * 100 ) ?>"
+                          class="progress-bar bg-gradient-info "
                           role="progressbar"
                           aria-valuenow="<?php echo ceil((floatval( $data_donasi[$i][6]) / floatval( $data_donasi[$i][3])) * 100 ) ?>"
                           aria-valuemin="0"
                           aria-valuemax="100"
+                          style="width: <?php echo ceil((floatval( $data_donasi[$i][6]) / floatval( $data_donasi[$i][3])) * 100 ) ?>%;"
                         ></div>
                       </div>
                     </div>
