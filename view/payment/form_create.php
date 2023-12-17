@@ -9,7 +9,7 @@
                     <i class="fas fa-arrow-left text-sm ms-1" aria-hidden="true"></i>
                       Kembali
                     </a>
-                <h5 class="font-weight-bolder">Create Payment</h5>
+                <h5 class="font-weight-bolder">Create Payment Donasi</h5>
 
                 <div class="row">
                     <div class="col-5 text-end mt-0">
