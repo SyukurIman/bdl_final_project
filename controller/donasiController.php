@@ -323,13 +323,14 @@ class DonasiController{
                                 </div>
                             </div>';
             $tgl_batas_donasi = $tgl <= $data[$i][5] ? $data[$i][5]." (Aktif)" : $data[$i][5]." (Non Aktif) ";
+            $deskripsi = str_word_count($data[$i][2]) >= 50  ? substr($data[$i][2], 0, 50)."...." : $data[$i][2];
             $data_json[] = [
                 'id' => $data[$i][0],
                 'DT_RowIndex' => $j++,
                 'action' => $btn_aksi,
                 'judul_donasi' => $nama_donasi,
                 'batas_waktu_donasi' => $tgl_batas_donasi,
-                'deskripsi_donasi' => $data[$i][2],
+                'deskripsi_donasi' => $deskripsi,
                 'target' => 'RP. '.number_format($data[$i][3], 2),
                 'nominal_terkumpul' => 'RP. '.number_format($data[$i][6], 2) 
             ];

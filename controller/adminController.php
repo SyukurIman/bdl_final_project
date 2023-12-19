@@ -31,7 +31,7 @@ class AdminController{
                 (SELECT SUM(p.price) 
                 FROM payments p 
                 WHERE d.id_data_donasi = p.id_donasi AND p.payment_status = 2 ) AS total_donasi,
-                (SELECT COUNT(p.price) 
+                (SELECT COUNT(p.payment_status) 
                 FROM payments p 
                 WHERE d.id_data_donasi = p.id_donasi AND p.payment_status = 2 ) AS total_USER 
                 FROM data_donasi d ORDER BY d.created_at DESC";

@@ -134,9 +134,9 @@
             <div class="col-lg-6">
               <div class="d-flex flex-column h-100">
                 <p class="mb-1 pt-2 text-bold">Kategori Donasi Terbaru</p>
-                <h5 class="font-weight-bolder"><?= isset($data_donasi[0][1] ) ? $data_donasi[0][1] : 'None' ?></h5>
+                <h5 class="font-weight-bolder" style="overflow-wrap: break-word"><?= isset($data_donasi[0][1] ) ? $data_donasi[0][1] : 'None' ?></h5>
                 <p class="mb-5">
-                  <?= $data_donasi[0][2] ?>
+                  <?= (str_word_count($data_donasi[0][2]) >= 100 ) ? substr($data_donasi[0][2], 0, 200)."...." : $data_donasi[0][2] ?>
                 </p>
                 <a
                   class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto"
@@ -174,8 +174,8 @@
             <h5 class="text-white font-weight-bolder mb-1 pt-0">
               <?= $data_donasi[1][1] ?>
             </h5>
-            <p class="text-white">
-              <?= $data_donasi[1][2] ?>
+            <p class="text-white" style="overflow-wrap: break-word">
+              <?= str_word_count($data_donasi[1][2]) >= 100  ? substr($data_donasi[1][2], 0, 100)."...." : $data_donasi[1][2] ?>
             </p>
             <a
               class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto"
