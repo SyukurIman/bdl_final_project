@@ -63,9 +63,10 @@ class PaymentController{
         $dukungan = isset($_POST['dukungan']) ? $_POST['dukungan'] : "";
         $payment_status = 1;
         $id_donasi = $_POST['id_data_donasi'];
+        $currentDateTime = date('Y-m-d H:i:s');
 
-        $sql = "INSERT INTO payments (id_donasi, price, payment_status, id_user, dukungan, nama_donatur)
-                VALUES ('$id_donasi', '$price', '$payment_status', '$id_user', '$dukungan', '$nama_donasi')";
+        $sql = "INSERT INTO payments (id_donasi, price, payment_status, id_user, dukungan, nama_donatur,created_at)
+                VALUES ('$id_donasi', '$price', '$payment_status', '$id_user', '$dukungan', '$nama_donasi','$currentDateTime')";
         
         $result = mysqli_query($conn, $sql);
         if ($result) {
@@ -143,74 +144,66 @@ class PaymentController{
 
     public function filters($data){
         $sql = "SELECT p.id, u.email, d.judul_donasi, p.created_at, p.price, p.payment_status
-                FROM payments p
-                LEFT JOIN data_donasi d ON p.id_donasi = d.id_data_donasi
-                LEFT JOIN users u ON p.id_user = u.id";
-        $data_min_nominal = $data['min_nominal'] != "" ? " p.price >= ".$data['min_nominal'] : '';
-        $data_max_nominal = $data['max_nominal'] != "" ? " p.price <= ".$data['max_nominal'] : '';
-        $data_payment_status = $data['payment_status'] != "" ? " p.payment_status = ".$data['payment_status'] : '';
-        $sql_nominal = "";
-        $data_min_tgl_payment = $data['min_tgl_payment'] != '' ? " p.created_at >= '".$data['min_tgl_payment']." 00:00:00'" : '';
-        $data_max_tgl_payment = $data['max_tgl_payment'] != '' ? " p.created_at <= '".$data['max_tgl_payment']." 23:59:00'" : '';
+        FROM payments p
+        LEFT JOIN data_donasi d ON p.id_donasi = d.id_data_donasi
+        LEFT JOIN users u ON p.id_user = u.id";
 
-        if ($data_min_nominal != "" && $data_max_nominal != "") {
-            $sql_nominal = $data_min_nominal." AND ".$data_max_nominal;
+        $conditions = array();
+        if (!empty($data['payment_status'])) {
+            $conditions[] = "p.payment_status = '" . $data['payment_status'] . "'";
         }
-
-        if ($data != ''){
-            $sql = $sql." WHERE ";
-            if ($sql_nominal != "") {
-                $sql = $sql.$sql_nominal;
-            } else if ($data_min_nominal != '') {
-                $sql = $sql.$data_min_nominal;
-            } else if ($data_max_nominal != "") {
-                $sql = $sql.$data_max_nominal;
-            }
-
-            if ($data_min_tgl_payment != '' ) {
-                if($sql_nominal != "" || $data_min_nominal != '' || $data_max_nominal != ""){
-                    $sql = $sql.' AND '.$data_min_tgl_payment;
-                } else {
-                    $sql = $sql.$data_min_tgl_payment;
-                }
-                
-            } 
-            if ($data_max_tgl_payment != '') {
-                if($sql_nominal != "" || $data_min_nominal != '' || $data_max_nominal != "" || $data_min_tgl_payment != '' ){
-                    $sql = $sql.' AND '.$data_max_tgl_payment;
-                } else {
-                    $sql = $sql.$data_max_tgl_payment;
-                }
-            } 
-
-            if ($data_max_tgl_payment != '' && $data_min_tgl_payment != '') {
-                $check_mx_tgl = explode(' ', $data_max_tgl_payment)[3];
-                $check_min_tgl = explode(' ', $data_min_tgl_payment)[3];
-
-                // echo $check_min_tgl;
-                if ($check_mx_tgl <= $check_min_tgl) {
-                    $msg = [
-                        'title' => 'Gagal',
-                        'type' => 'error',
-                        'text' => 'Data tanggal tidak tepat !!',
-                        "icon" => "error",
-                        "ButtonColor" => "#EF5350"
-                    ];
-                    return json_encode($msg);
-                }
-
-            }
-            
-            if ($data_payment_status != '') {
-                if($data_max_tgl_payment != '' || $sql_nominal != "" || $data_min_nominal != '' || $data_max_nominal != "" || $data_min_tgl_payment != '' ){
-                    $sql = $sql.' AND '.$data_payment_status;
-                } else {
-                    $sql = $sql.$data_payment_status;
-                }
-            }
-        }
-
         
+        if (!empty($data['email_user'])) {
+            $conditions[] = "u.email = '" . $data['email_user'] . "'";
+        }
+
+        if (!empty($data['min_nominal'])) {
+            $conditions[] = "p.price > " . $data['min_nominal'];
+        }
+
+        if (!empty($data['max_nominal'])) {
+            $conditions[] = "p.price < " . $data['max_nominal'];
+        }
+        
+        if (!empty($data['min_tgl_payment']) && !empty($data['max_tgl_payment'])) {
+            // Jika keduanya terisi, hapus kondisi tanggal pertama
+            $indexMin = array_search("p.created_at > '" . $data['min_tgl_payment'] . "'", $conditions);
+            $indexMax = array_search("p.created_at < '" . $data['max_tgl_payment'] . "'", $conditions);
+
+            if ($indexMin !== false) {
+                unset($conditions[$indexMin]);
+            }
+
+            if ($indexMax !== false) {
+                unset($conditions[$indexMax]);
+            }
+
+            $conditions[] = "p.created_at BETWEEN '" . $data['min_tgl_payment'] . "' AND '" . $data['max_tgl_payment'] . "'";
+        } elseif (!empty($data['min_tgl_payment'])) {
+            // Jika hanya tanggal pertama terisi, hapus kondisi tanggal kedua
+            $indexMax = array_search("p.created_at < '" . $data['max_tgl_payment'] . "'", $conditions);
+
+            if ($indexMax !== false) {
+                unset($conditions[$indexMax]);
+            }
+
+            $conditions[] = "p.created_at > '" . $data['min_tgl_payment'] . "'";
+        } elseif (!empty($data['max_tgl_payment'])) {
+            // Jika hanya tanggal kedua terisi, hapus kondisi tanggal pertama
+            $indexMin = array_search("p.created_at > '" . $data['min_tgl_payment'] . "'", $conditions);
+
+            if ($indexMin !== false) {
+                unset($conditions[$indexMin]);
+            }
+
+            $conditions[] = "p.created_at < '" . $data['max_tgl_payment'] . "'";
+        }
+
+
+        if (!empty($conditions)) {
+            $sql .= " WHERE " . implode(" AND ", $conditions);
+        }
+
         $msg = [
             'title' => 'Sukses',
             'type' => 'success',
@@ -223,21 +216,22 @@ class PaymentController{
     }
 
     public function topDonasi($data){
-        $tanggal_awal = $data['tanggal_awal'] != "" ? "'".$data['tanggal_awal'] ." 00:00:00'": '' ;
-        $tanggal_akhir = $data['tanggal_akhir'] != "" ? "'".$data['tanggal_akhir'] ." 23:59:00'": '';
+        $tanggal_awal = $data['tanggal_awal'] != "" ? "'".$data['tanggal_awal'] ."'": '' ;
+        $tanggal_akhir = $data['tanggal_akhir'] != "" ? "'".$data['tanggal_akhir'] ."'": '';
 
         $sql = "SELECT p.id, u.email, d.judul_donasi, p.created_at, p.price, p.payment_status
-        FROM payments p
-        LEFT JOIN data_donasi d ON p.id_donasi = d.id_data_donasi
-        LEFT JOIN users u ON p.id_user = u.id
-        WHERE p.created_at >= ".$tanggal_awal." AND p.created_at <= ".$tanggal_akhir." AND p.payment_status = 2
-        AND p.price > (
-            SELECT AVG(price)
-            FROM payments
-            WHERE created_at >= ".$tanggal_awal." AND created_at <= ".$tanggal_akhir." AND payment_status = 2
-        )
-        ORDER BY p.price DESC";
-
+                FROM payments p
+                LEFT JOIN data_donasi d ON p.id_donasi = d.id_data_donasi
+                LEFT JOIN users u ON p.id_user = u.id
+                WHERE p.created_at BETWEEN ".$tanggal_awal." AND ".$tanggal_akhir."
+                    AND p.payment_status = 2
+                    AND p.price >= (
+                        SELECT AVG(price)
+                        FROM payments
+                        WHERE created_at BETWEEN ".$tanggal_awal." AND ".$tanggal_akhir."
+                            AND payment_status = 2
+                    )
+                ORDER BY p.price DESC;";
         $msg = [
             'title' => 'Sukses',
             'type' => 'success',
