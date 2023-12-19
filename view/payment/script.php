@@ -102,7 +102,8 @@ var data = ( function () {
                 'max_nominal' : $('#max_nominal').val(),
                 'min_tgl_payment' : $('#min_tgl_payment').val(),
                 'max_tgl_payment' : $('#max_tgl_payment').val(),
-                'payment_status' : $('#payment_status').val()
+                'email_user' : $('#email_user').val(),
+                'payment_status' : $('#payment_status').val(),
             }
 
             $.ajax({

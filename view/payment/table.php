@@ -22,42 +22,54 @@
       <div class="filter" style="display: none;">
         <form action="" method="post" id="form_filter">
           <input type="hidden" name="sql" id="sql">
-          <div class="row px-4">
-            <div class="col mb-md-0 mb-4 row">
-              <div class="col mt-2">
-                <label class="form-label" for="min_nominal" >Minimum Nominal Pembayaran</label>
-                <input class="form-control input_form" type="number" name="min_nominal" id="min_nominal">
+            <div class="row px-4">
+                  <div class="col-md-3 mt-2">
+                    <label class="form-label" for="email_user" >Email</label>
+                    <select class="form-select input_form" id="email_user" name="email_user">
+                        <option value="" selected>Choose...</option>
+                        <?php
+                        $uniqueValues = array(); // Array untuk menyimpan nilai unik
+
+                        for ($i = 0; $i < count($data); $i++) {
+                            $emailUser = $data[$i][1];
+
+                            // Memastikan nilai unik sebelum menambahkannya ke opsi
+                            if (!in_array($emailUser, $uniqueValues)) {
+                                echo '<option value="' . $emailUser . '">' . $emailUser . '</option>';
+                                $uniqueValues[] = $emailUser; // Menambahkan nilai ke array nilai unik
+                            }
+                        }
+                        ?>
+                    </select>
+                  </div>
+                  <div class="col-md-3 mt-2">
+                    <label class="form-label" for="min_nominal" >Minimum Nominal Pembayaran</label>
+                    <input class="form-control input_form" type="number" name="min_nominal" id="min_nominal">
+                  </div>
+                  <div class="col-md-3 mt-2">
+                    <label class="form-label" for="max_nominal" >Maximum Nominal Pembayaran</label>
+                    <input class="form-control input_form" type="number" name="max_nominal" id="max_nominal">
+                  </div>
+                  <div class="col-md-3 mt-2">
+                    <label class="form-label" for="payment_status" >Status Pembayaran</label>
+                    <select class="form-select input_form" id="payment_status" name="payment_status">
+                        <option value="" selected>Choose...</option>
+                        <option value="1">Menunggu Pembayaran</option>
+                        <option value="2">Pembayaran Berhasil</option>
+                        <option value="3">Pembayaran Expired</option>
+                      </select>
+                  </div>
               </div>
-              <div class="col mt-2">
-                <label class="form-label" for="max_nominal" >Maximum Nominal Pembayaran</label>
-                <input class="form-control input_form" type="number" name="max_nominal" id="max_nominal">
-              </div>
+            <div class="row px-4">
+                <div class="col-md-6 mt-2">
+                  <label class="form-label" for="min_tgl_payment" >Tanggal Awal</label>
+                  <input class="form-control input_form" type="date" name="min_tgl_payment" id="min_tgl_payment">
+                </div>
+                <div class="col-md-6 mt-2">
+                  <label class="form-label" for="max_tgl_payment" >Tanggal Akhir </label>
+                  <input class="form-control input_form" type="date" name="max_tgl_payment" id="max_tgl_payment">
+                </div>
             </div>
-
-            <div class="col mb-md-0 mb-4 row">
-              <div class="col mt-2">
-                <label class="form-label" for="min_tgl_payment" >Start Date</label>
-                <input class="form-control input_form" type="date" name="min_tgl_payment" id="min_tgl_payment">
-              </div>
-              <div class="col mt-2">
-                <label class="form-label" for="max_tgl_payment" >End Date </label>
-                <input class="form-control input_form" type="date" name="max_tgl_payment" id="max_tgl_payment">
-              </div>
-            </div>
-
-            <div class="col mt-2">
-                <label class="form-label" for="payment_status" >Status Payment</label>
-                <select class="form-control input_form" name="payment_status" id="payment_status">
-                  <option value="" selected>Silahkan Pilih Status Payment</option>
-                  <option value="1">Menunggu Pembayaran</option>
-                  <option value="2">Pembayaran Berhasil</option>
-                  <option value="3">Pembayaran Expired</option>
-                </select>
-              </div>
-
-            
-
-          </div>
             
         </form>
       </div>
