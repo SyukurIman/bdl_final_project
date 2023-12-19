@@ -100,8 +100,9 @@ var data = ( function () {
             var data_new = {
                 'min_nominal' : $('#min_nominal').val(),
                 'max_nominal' : $('#max_nominal').val(),
-                'min_tgl_donasi' : $('#min_tgl_donasi').val(),
-                'max_tgl_donasi' : $('#max_tgl_donasi').val()
+                'min_tgl_payment' : $('#min_tgl_payment').val(),
+                'max_tgl_payment' : $('#max_tgl_payment').val(),
+                'payment_status' : $('#payment_status').val()
             }
 
             $.ajax({
@@ -131,10 +132,10 @@ var data = ( function () {
                         });
                     }else{
                         swal.fire({
-                            title: result.title,
-                            text : result.text,
-                            confirmButtonColor: result.ButtonColor,
-                            type : result.type,
+                            title: result_ajax.title,
+                            text : result_ajax.text,
+                            confirmButtonColor: result_ajax.ButtonColor,
+                            type : result_ajax.type,
                         });
                     }
                 }

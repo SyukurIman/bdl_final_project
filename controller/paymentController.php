@@ -110,7 +110,7 @@ class PaymentController{
     public function save_update(){
         $conn =  $this->db_payment->connect();
 
-        $nama_donasi = isset($_POST['nama_donasi']) ? $_POST['nama_donasi'] : "Orang Baik";
+        $nama_donasi = isset($_POST['nama_donasi']) && $_POST['nama_donasi'] != '' ? $_POST['nama_donasi'] : "Orang Baik";
         $dukungan = isset($_POST['dukungan']) ? $_POST['dukungan'] : "";
         $payment_status = $_POST['payment_status'];
         $id = $_POST['id_payment'];
@@ -146,23 +146,67 @@ class PaymentController{
                 FROM payments p
                 LEFT JOIN data_donasi d ON p.id_donasi = d.id_data_donasi
                 LEFT JOIN users u ON p.id_user = u.id";
-        $data_min_nominal = $data['min_nominal'] != "" ? " p.price > ".$data['min_nominal'] : '';
-        $data_max_nominal = $data['max_nominal'] != "" ? " p.price < ".$data['max_nominal'] : '';
+        $data_min_nominal = $data['min_nominal'] != "" ? " p.price >= ".$data['min_nominal'] : '';
+        $data_max_nominal = $data['max_nominal'] != "" ? " p.price <= ".$data['max_nominal'] : '';
+        $data_payment_status = $data['payment_status'] != "" ? " p.payment_status = ".$data['payment_status'] : '';
         $sql_nominal = "";
-        $data_min_tgl_donasi = $data['min_tgl_donasi'] != '' ? $data['min_tgl_donasi'] : '';
-        $data_max_tgl_donasi = $data['max_tgl_donasi'] != '' ? $data['max_tgl_donasi'] : '';
+        $data_min_tgl_payment = $data['min_tgl_payment'] != '' ? " p.created_at >= '".$data['min_tgl_payment']." 00:00:00'" : '';
+        $data_max_tgl_payment = $data['max_tgl_payment'] != '' ? " p.created_at <= '".$data['max_tgl_payment']." 23:59:00'" : '';
 
         if ($data_min_nominal != "" && $data_max_nominal != "") {
             $sql_nominal = $data_min_nominal." AND ".$data_max_nominal;
         }
 
-        if ($data_min_nominal != "" || $data_max_nominal != ""){
+        if ($data != ''){
+            $sql = $sql." WHERE ";
             if ($sql_nominal != "") {
-                $sql = $sql." WHERE ".$sql_nominal;
+                $sql = $sql.$sql_nominal;
             } else if ($data_min_nominal != '') {
-                $sql = $sql." WHERE ".$data_min_nominal;
+                $sql = $sql.$data_min_nominal;
             } else if ($data_max_nominal != "") {
-                $sql = $sql." WHERE ".$data_max_nominal;
+                $sql = $sql.$data_max_nominal;
+            }
+
+            if ($data_min_tgl_payment != '' ) {
+                if($sql_nominal != "" || $data_min_nominal != '' || $data_max_nominal != ""){
+                    $sql = $sql.' AND '.$data_min_tgl_payment;
+                } else {
+                    $sql = $sql.$data_min_tgl_payment;
+                }
+                
+            } 
+            if ($data_max_tgl_payment != '') {
+                if($sql_nominal != "" || $data_min_nominal != '' || $data_max_nominal != "" || $data_min_tgl_payment != '' ){
+                    $sql = $sql.' AND '.$data_max_tgl_payment;
+                } else {
+                    $sql = $sql.$data_max_tgl_payment;
+                }
+            } 
+
+            if ($data_max_tgl_payment != '' && $data_min_tgl_payment != '') {
+                $check_mx_tgl = explode(' ', $data_max_tgl_payment)[3];
+                $check_min_tgl = explode(' ', $data_min_tgl_payment)[3];
+
+                // echo $check_min_tgl;
+                if ($check_mx_tgl <= $check_min_tgl) {
+                    $msg = [
+                        'title' => 'Gagal',
+                        'type' => 'error',
+                        'text' => 'Data tanggal tidak tepat !!',
+                        "icon" => "error",
+                        "ButtonColor" => "#EF5350"
+                    ];
+                    return json_encode($msg);
+                }
+
+            }
+            
+            if ($data_payment_status != '') {
+                if($data_max_tgl_payment != '' || $sql_nominal != "" || $data_min_nominal != '' || $data_max_nominal != "" || $data_min_tgl_payment != '' ){
+                    $sql = $sql.' AND '.$data_payment_status;
+                } else {
+                    $sql = $sql.$data_payment_status;
+                }
             }
         }
 

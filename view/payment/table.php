@@ -23,7 +23,7 @@
         <form action="" method="post" id="form_filter">
           <input type="hidden" name="sql" id="sql">
           <div class="row px-4">
-            <div class="col-lg-6 col-md-6 mb-md-0 mb-4 row">
+            <div class="col mb-md-0 mb-4 row">
               <div class="col mt-2">
                 <label class="form-label" for="min_nominal" >Minimum Nominal Pembayaran</label>
                 <input class="form-control input_form" type="number" name="min_nominal" id="min_nominal">
@@ -34,16 +34,28 @@
               </div>
             </div>
 
-            <div class="col-lg-6 col-md-6 mb-md-0 mb-4 row">
+            <div class="col mb-md-0 mb-4 row">
               <div class="col mt-2">
-                <label class="form-label" for="min_tgl_donasi" >Minimum Batas Donasi </label>
-                <input class="form-control input_form" type="date" name="min_tgl_donasi" id="min_tgl_donasi">
+                <label class="form-label" for="min_tgl_payment" >Start Date</label>
+                <input class="form-control input_form" type="date" name="min_tgl_payment" id="min_tgl_payment">
               </div>
               <div class="col mt-2">
-                <label class="form-label" for="max_tgl_donasi" >Maximum Batas Donasi </label>
-                <input class="form-control input_form" type="date" name="max_tgl_donasi" id="max_tgl_donasi">
+                <label class="form-label" for="max_tgl_payment" >End Date </label>
+                <input class="form-control input_form" type="date" name="max_tgl_payment" id="max_tgl_payment">
               </div>
             </div>
+
+            <div class="col mt-2">
+                <label class="form-label" for="payment_status" >Status Payment</label>
+                <select class="form-control input_form" name="payment_status" id="payment_status">
+                  <option value="" selected>Silahkan Pilih Status Payment</option>
+                  <option value="1">Menunggu Pembayaran</option>
+                  <option value="2">Pembayaran Berhasil</option>
+                  <option value="3">Pembayaran Expired</option>
+                </select>
+              </div>
+
+            
 
           </div>
             

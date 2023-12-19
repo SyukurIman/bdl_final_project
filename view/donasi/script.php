@@ -296,10 +296,10 @@ var data = ( function () {
                         });
                     }else{
                         swal.fire({
-                            title: result.title,
-                            text : result.text,
-                            confirmButtonColor: result.ButtonColor,
-                            type : result.type,
+                            title: result_ajax.title,
+                            text : result_ajax.text,
+                            confirmButtonColor: result_ajax.ButtonColor,
+                            type : result_ajax.type,
                         });
                     }
                 }
