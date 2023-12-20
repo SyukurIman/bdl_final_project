@@ -101,5 +101,6 @@ class AdminController{
             "icon" => "error",
             "ButtonColor" => "#EF5350"
         ];
+        return json_encode($msg);
     }
 }

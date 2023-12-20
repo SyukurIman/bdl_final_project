@@ -40,7 +40,7 @@ var data = ( function () {
                     $('.buttons-excel').hide();
                     swal.close();
                     console.log($('#sql').val())
-                    $('#sql').val("");
+                    $('#sql').val(" ");
                     console.log("Sql_t"+$('#sql').val())
                 }
             },

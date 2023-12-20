@@ -42,7 +42,8 @@ class PaymentController{
 
         $conn =  $this->db_payment->connect();
 
-        $sql = "SELECT d.*, (SELECT SUM(p.price) FROM payments p WHERE d.id_data_donasi = p.id_donasi AND p.payment_status = 2 ) AS total_donasi
+        $sql = "SELECT d.*, 
+                (SELECT SUM(p.price) FROM payments p WHERE d.id_data_donasi = p.id_donasi AND p.payment_status = 2 ) AS total_donasi
                 FROM data_donasi d WHERE d.id_data_donasi=".$id;
         $result = mysqli_query($conn, $sql);
         $data_donasi = mysqli_fetch_all($result);
@@ -176,6 +177,17 @@ class PaymentController{
 
             if ($indexMax !== false) {
                 unset($conditions[$indexMax]);
+            }
+
+            if($data['max_tgl_payment'] < $data['min_tgl_payment']){
+                $msg = [
+                    "title" => "Gagal !!",
+                    "type" => "error",
+                    "text" => "Tanggal input tidak tepat !!",
+                    "icon" => "error",
+                    "ButtonColor" => "#EF5350"
+                ];
+                return json_encode($msg);
             }
 
             $conditions[] = "p.created_at BETWEEN '" . $data['min_tgl_payment'] . "' AND '" . $data['max_tgl_payment'] . "'";

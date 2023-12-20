@@ -232,7 +232,7 @@ class DonasiController{
             $sql_nominal = $data_min_nominal." AND ".$data_max_nominal;
         }
 
-        if ($data != ''){
+        if ($data_min_tgl_donasi != '' || $sql_nominal != "" || $data_max_nominal != "" || $data_min_nominal != ''){
             $sql = $sql." WHERE ";
             if ($sql_nominal != "") {
                 $sql = $sql.$sql_nominal;
@@ -243,7 +243,7 @@ class DonasiController{
             }
 
             if ($data_min_tgl_donasi != '' ) {
-                if($sql_nominal != "" || $data_min_nominal != '' || $data_max_nominal != ""){
+                if($sql_nominal != "" || $data_min_nominal != '' || $data_max_nominal != "" || $data_max_tgl_donasi != ''){
                     $sql = $sql.' AND '.$data_min_tgl_donasi;
                 } else {
                     $sql = $sql.$data_min_tgl_donasi;

@@ -13,7 +13,7 @@
           <div class="col-lg-6 col-5 my-auto text-end">
             <div class="dropdown float-lg-end pe-4">
               <button class="btn btn-secondary btn-data" id="filter_btn"><i class="fas fa-filter"></i> <span>Filter</span></button>
-              <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#top_donasi"><i class="fas fa-trophy"></i> <span> Top Donatur Filter</span></button>
+              <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#top_donasi"><i class="fas fa-trophy"></i> <span> Top Donatur</span></button>
               <button class="btn btn-warning btn-data" id="download_btn"><i class="fas fa-download"></i> <span>Download</span></button>
           </div>
           </div>
